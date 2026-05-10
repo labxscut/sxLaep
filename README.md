@@ -45,24 +45,24 @@ computational load for downstream analysis while effectively retaining potential
 
 
 ## DOCKER
-A pre-configured Docker image is provided to run `sxLaep` in an isolated environment with Python 3.12 and all required dependencies.
+A pre-configured Docker image is provided to run `sxLaep` in an isolated environment with Python 3.11 and all required dependencies.
 
 ### Quick Start
 Pull the official image directly:
 ```bash
-docker pull labxscut/sxlaep:python3.12
+docker pull labxscut/sxlaep:python3.11
 ```
 ### Running the Container
 Mount your local data directory to the container's working directory (/workspace) and start an interactive shell:
 ```bash
-docker run --rm -it -v $(pwd):/workspace labxscut/sxlaep:python3.12 bash
+docker run --rm -it -v $(pwd):/workspace labxscut/sxlaep:python3.11 bash
 ```
 Once inside the container, the sxlaep CLI is ready to use (the sxlaep conda environment is auto-activated).
 
 ### Build Locally (Optional)
 If you prefer to build the image from the provided Dockerfile:
 ```bash
-docker build --no-cache -t labxscut/sxlaep:python3.12 .
+docker build --no-cache -t labxscut/sxlaep:python3.11 .
 ```
 Then run it using the docker run command above.
 
