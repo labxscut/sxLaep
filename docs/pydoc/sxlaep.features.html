@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module sxlaep.features</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="sxlaep.html" class="white">sxlaep</a>.features</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:/path/to/sxlaep/features.py">/path/to/sxlaep/features.py</a></td></tr></table>
+    <p><span class="code">Protein&nbsp;sequence&nbsp;feature&nbsp;extraction&nbsp;for&nbsp;sxLaep.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="numpy.html">numpy</a><br>
+</td><td class="multicolumn"><a href="re.html">re</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-ctd_features"><strong>ctd_features</strong></a>(sequence: 'str') -&gt; 'np.ndarray'</dt><dd><span class="code">Compute&nbsp;composition-transition-distribution&nbsp;features.<br>
+&nbsp;<br>
+Seven&nbsp;physicochemical&nbsp;group&nbsp;systems&nbsp;are&nbsp;used.&nbsp;For&nbsp;each&nbsp;system,&nbsp;the&nbsp;function<br>
+returns&nbsp;3&nbsp;composition&nbsp;values,&nbsp;3&nbsp;transition&nbsp;values,&nbsp;and&nbsp;15&nbsp;distribution<br>
+values,&nbsp;yielding&nbsp;147&nbsp;features&nbsp;in&nbsp;total.</span></dd></dl>
+ <dl><dt><a name="-extract_feature_matrix"><strong>extract_feature_matrix</strong></a>(sequences: 'Sequence[str]', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'np.ndarray'</dt><dd><span class="code">Extract&nbsp;a&nbsp;feature&nbsp;matrix&nbsp;from&nbsp;a&nbsp;sequence&nbsp;collection.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+sequences:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Protein&nbsp;sequences.<br>
+config:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Feature&nbsp;extraction&nbsp;configuration.<br>
+n_jobs:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;parallel&nbsp;workers.&nbsp;Values&nbsp;less&nbsp;than&nbsp;or&nbsp;equal&nbsp;to&nbsp;one&nbsp;run&nbsp;in&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;single&nbsp;process.</span></dd></dl>
+ <dl><dt><a name="-extract_features"><strong>extract_features</strong></a>(sequence: 'str', config: 'FeatureConfig | None' = None) -&gt; 'np.ndarray'</dt><dd><span class="code">Extract&nbsp;the&nbsp;full&nbsp;sxLaep&nbsp;feature&nbsp;vector&nbsp;for&nbsp;one&nbsp;protein&nbsp;sequence.</span></dd></dl>
+ <dl><dt><a name="-feature_names"><strong>feature_names</strong></a>(config: 'FeatureConfig | None' = None) -&gt; 'list[str]'</dt><dd><span class="code">Return&nbsp;names&nbsp;for&nbsp;all&nbsp;extracted&nbsp;sxLaep&nbsp;features.</span></dd></dl>
+ <dl><dt><a name="-pse_aac_multi"><strong>pse_aac_multi</strong></a>(sequence: 'str', lam: 'int' = 10, weight: 'float' = 0.05, properties: 'Mapping[str, Mapping[str, float]]' = {'hydro': {'A': 1.8, 'C': 2.5, 'D': -3.5, 'E': -3.5, 'F': 2.8, 'G': -0.4, 'H': -3.2, 'I': 4.5, 'K': -3.9, 'L': 3.8, 'M': 1.9, 'N': -3.5, 'P': -1.6, 'Q': -3.5, 'R': -4.5, 'S': -0.8, 'T': -0.7, 'V': 4.2, 'W': -0.9, 'Y': -1.3}, 'polar': {'A': 8.1, 'C': 5.5, 'D': 13.0, 'E': 12.3, 'F': 5.2, 'G': 9.0, 'H': 10.4, 'I': 5.2, 'K': 11.3, 'L': 4.9, 'M': 5.7, 'N': 11.6, 'P': 8.0, 'Q': 10.5, 'R': 10.5, 'S': 9.2, 'T': 8.6, 'V': 5.9, 'W': 5.4, 'Y': 6.2}, 'charge': {'A': 0, 'C': 0, 'D': -1, 'E': -1, 'F': 0, 'G': 0, 'H': 0.5, 'I': 0, 'K': 1, 'L': 0, 'M': 0, 'N': 0, 'P': 0, 'Q': 0, 'R': 1, 'S': 0, 'T': 0, 'V': 0, 'W': 0, 'Y': 0}}, add_length: 'bool' = True) -&gt; 'np.ndarray'</dt><dd><span class="code">Compute&nbsp;multi-property&nbsp;pseudo-amino&nbsp;acid&nbsp;composition&nbsp;features.<br>
+&nbsp;<br>
+The&nbsp;output&nbsp;contains&nbsp;standard&nbsp;amino&nbsp;acid&nbsp;composition,&nbsp;property-specific<br>
+sequence-order&nbsp;correlation&nbsp;terms,&nbsp;and&nbsp;optionally&nbsp;sequence&nbsp;length.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+sequence:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Input&nbsp;protein&nbsp;sequence.<br>
+lam:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum&nbsp;correlation&nbsp;lag.<br>
+weight:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Weight&nbsp;applied&nbsp;to&nbsp;sequence-order&nbsp;terms.<br>
+properties:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Mapping&nbsp;from&nbsp;property&nbsp;name&nbsp;to&nbsp;amino-acid&nbsp;property&nbsp;values.<br>
+add_length:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Whether&nbsp;to&nbsp;append&nbsp;sequence&nbsp;length&nbsp;as&nbsp;the&nbsp;last&nbsp;feature.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+numpy.ndarray<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Feature&nbsp;vector&nbsp;with&nbsp;length&nbsp;``20&nbsp;+&nbsp;lam&nbsp;*&nbsp;n_properties&nbsp;+&nbsp;int(add_length)``.</span></dd></dl>
+ <dl><dt><a name="-sanitize_sequence"><strong>sanitize_sequence</strong></a>(sequence: 'str') -&gt; 'str'</dt><dd><span class="code">Return&nbsp;an&nbsp;uppercase&nbsp;protein&nbsp;sequence&nbsp;containing&nbsp;only&nbsp;the&nbsp;20&nbsp;standard&nbsp;amino&nbsp;acids.</span></dd></dl>
+ <dl><dt><a name="-window_aac"><strong>window_aac</strong></a>(sequence: 'str', n_segments: 'int' = 3) -&gt; 'np.ndarray'</dt><dd><span class="code">Compute&nbsp;windowed&nbsp;amino&nbsp;acid&nbsp;composition&nbsp;over&nbsp;N-to-C&nbsp;sequence&nbsp;segments.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>AA20</strong> = 'ACDEFGHIKLMNPQRSTVWY'<br>
+<strong>CTD_GROUPS</strong> = {'charge': [{'K', 'R'}, {'A', 'C', 'F', 'G', 'H', 'I', ...}, {'D', 'E'}], 'hydrophobicity': [{'D', 'E', 'K', 'N', 'Q', 'R'}, {'A', 'G', 'H', 'P', 'S', 'T', ...}, {'C', 'F', 'I', 'L', 'M', 'V', ...}], 'normalized_vdw': [{'A', 'D', 'G', 'P', 'S', 'T'}, {'E', 'I', 'L', 'N', 'Q', 'V'}, {'F', 'H', 'K', 'M', 'R', 'W', ...}], 'polarity': [{'C', 'F', 'I', 'L', 'M', 'V', ...}, {'A', 'G', 'P', 'S', 'T'}, {'D', 'E', 'H', 'K', 'N', 'Q', ...}], 'polarizability': [{'A', 'D', 'G', 'S', 'T'}, {'C', 'E', 'I', 'L', 'N', 'P', ...}, {'F', 'H', 'K', 'M', 'R', 'W', ...}], 'secondary': [{'D', 'E', 'N', 'Q', 'S', 'T'}, {'A', 'I', 'L', 'M', 'V'}, {'C', 'F', 'G', 'H', 'K', 'P', ...}], 'solvent_access': [{'A', 'C', 'F', 'G', 'I', 'L', ...}, {'D', 'E', 'K', 'N', 'Q', 'R'}, {'H', 'M', 'P', 'S', 'T', 'Y'}]}<br>
+<strong>Mapping</strong> = typing.Mapping<br>
+<strong>PROPERTIES</strong> = {'charge': {'A': 0, 'C': 0, 'D': -1, 'E': -1, 'F': 0, 'G': 0, 'H': 0.5, 'I': 0, 'K': 1, 'L': 0, ...}, 'hydro': {'A': 1.8, 'C': 2.5, 'D': -3.5, 'E': -3.5, 'F': 2.8, 'G': -0.4, 'H': -3.2, 'I': 4.5, 'K': -3.9, 'L': 3.8, ...}, 'polar': {'A': 8.1, 'C': 5.5, 'D': 13.0, 'E': 12.3, 'F': 5.2, 'G': 9.0, 'H': 10.4, 'I': 5.2, 'K': 11.3, 'L': 4.9, ...}}<br>
+<strong>Sequence</strong> = typing.Sequence</td></tr></table>
+</body></html>

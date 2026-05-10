@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module sxlaep.training</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="sxlaep.html" class="white">sxlaep</a>.training</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:/path/to/sxlaep/training.py">/path/to/sxlaep/training.py</a></td></tr></table>
+    <p><span class="code">Training&nbsp;and&nbsp;evaluation&nbsp;routines&nbsp;for&nbsp;sxLaep.</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="numpy.html">numpy</a><br>
+</td><td class="multicolumn"><a href="pandas.html">pandas</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
+    
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-compute_scale_pos_weight"><strong>compute_scale_pos_weight</strong></a>(labels: 'np.ndarray') -&gt; 'float'</dt><dd><span class="code">Compute&nbsp;XGBoost&nbsp;positive-class&nbsp;weighting&nbsp;from&nbsp;binary&nbsp;labels.</span></dd></dl>
+ <dl><dt><a name="-evaluate_predictions"><strong>evaluate_predictions</strong></a>(y_true: 'np.ndarray', y_pred: 'np.ndarray') -&gt; 'dict[str, Any]'</dt><dd><span class="code">Return&nbsp;standard&nbsp;binary&nbsp;classification&nbsp;metrics&nbsp;and&nbsp;report&nbsp;objects.</span></dd></dl>
+ <dl><dt><a name="-load_labeled_fastas"><strong>load_labeled_fastas</strong></a>(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path') -&gt; 'tuple[list[str], np.ndarray]'</dt><dd><span class="code">Load&nbsp;non-enzyme&nbsp;and&nbsp;enzyme&nbsp;FASTA&nbsp;files&nbsp;into&nbsp;sequences&nbsp;and&nbsp;binary&nbsp;labels.</span></dd></dl>
+ <dl><dt><a name="-train_enzyme_classifier"><strong>train_enzyme_classifier</strong></a>(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/sxlaep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -&gt; 'dict[str, Any]'</dt><dd><span class="code">Train&nbsp;an&nbsp;enzyme/non-enzyme&nbsp;classifier&nbsp;from&nbsp;two&nbsp;FASTA&nbsp;files.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+noenzyme_fasta:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FASTA&nbsp;file&nbsp;containing&nbsp;negative-class&nbsp;protein&nbsp;sequences.<br>
+enzyme_fasta:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FASTA&nbsp;file&nbsp;containing&nbsp;positive-class&nbsp;enzyme&nbsp;sequences.<br>
+output_dir:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Directory&nbsp;for&nbsp;model&nbsp;and&nbsp;evaluation&nbsp;outputs.<br>
+feature_config:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Feature&nbsp;extraction&nbsp;configuration.<br>
+training_config:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Train/test&nbsp;split&nbsp;and&nbsp;output&nbsp;naming&nbsp;configuration.<br>
+xgb_params:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Optional&nbsp;overrides&nbsp;for&nbsp;XGBoost&nbsp;hyperparameters.</span></dd></dl>
+</td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>Mapping</strong> = typing.Mapping</td></tr></table>
+</body></html>
