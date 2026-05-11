@@ -1,5 +1,4 @@
-# sxLaep: Rapid Enzyme/Non-Enzyme Prediction
-
+# sxLaep: a Lightweight and Accurate Enzyme Predictor
 sxLaep is an efficient machine learning tool for predicting whether a protein sequence is an enzyme or non-enzyme. It combines multi-physicochemical sequence features with an XGBoost classifier for fast and accurate binary classification.
 
 ## QUICK LINKS
@@ -215,6 +214,6 @@ Where:
 
 Please cite sxLaep if you use it in your research:
 
-> labxscut. sxLaep: a Lightweight and Accurate EnzymePredictor for High-throughput Mining of Metagenomic Sequences. (2026).
+> labxscut. sxLaep: a Lightweight and Accurate Enzyme Predictor for High-throughput Mining of Metagenomic Sequences. (2026).
 
 
