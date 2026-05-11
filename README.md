@@ -215,12 +215,6 @@ Where:
 
 Please cite sxLaep if you use it in your research:
 
-> labxscut. sxLaep: Rapid Enzyme/Non-Enzyme Prediction using Sequence Features and XGBoost. (2026).
+> labxscut. sxLaep: a Lightweight and Accurate EnzymePredictor for High-throughput Mining of Metagenomic Sequences. (2026).
 
-Additional references for feature extraction methods:
 
-> 1. Chou KC. Pseudo amino acid composition and its applications in bioinformatics, proteomics and genome biology. Curr Protein Pept Sci. 2010;11(6):573-95.
->
-> 2. Dubchak I, Muchnik I, Holbrook SR, Kim SH. Prediction of protein folding class using global description of amino acid sequence. Proc Natl Acad Sci USA. 1995;92(19):8700-4.
->
-> 3. Chen T, Guestrin C. XGBoost: A scalable tree boosting system. In: Proceedings of 22nd ACM SIGKDD international conference on knowledge discovery and data mining. 2016. p. 785-94.
