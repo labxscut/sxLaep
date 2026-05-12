@@ -35,7 +35,7 @@ computational load for downstream analysis while effectively retaining potential
 
 ## SOFTWARE
 
-> sxLaep (Rapid Enzyme/Non-Enzyme Prediction)
+> sxLaep (Lightweight and Accurate Enzyme Predictor)
 >
 > The package is available for Python 3.7+ on Windows, Linux, and macOS.
 >
@@ -67,7 +67,7 @@ Then run it using the docker run command above.
 
 ## INSTALL
 
-> (1). # for use #
+> for users
 >
 > First, install prerequisites: Python 3.7+, numpy, pandas, scikit-learn, xgboost, and joblib as specified in requirements.txt.
 >
@@ -86,17 +86,7 @@ Then run it using the docker run command above.
 > predictor = sxlaep()
 > ```
 >
-> (2). # for development #
->
-> sxLaep is open source and your contributions are greatly welcome.
->
-> First, use git to clone a copy of sxLaep:
->
-> ```{.python .input}
-> user> git clone https://github.com/labxscut/sxLaep
-> cd sxLaep
-> user> pip install -e .
-> ```
+
 
 ## QUICK START
 
