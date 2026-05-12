@@ -37,7 +37,7 @@ computational load for downstream analysis while effectively retaining potential
 
 > sxLaep (Lightweight and Accurate Enzyme Predictor)
 >
-> The package is available for Python 3.7+ on Windows, Linux, and macOS.
+> The package is available for Python 3.9+ on Windows, Linux, and macOS.
 >
 > Latest updates and source code are available at:
 > https://github.com/labxscut/sxLaep
@@ -67,27 +67,58 @@ Then run it using the docker run command above.
 
 ## INSTALL
 
-> for users
->
-> First, install prerequisites: Python 3.7+, numpy, pandas, scikit-learn, xgboost, and joblib as specified in requirements.txt.
->
-> Same for Linux, Mac OS, Windows, with a Conda-like Virtual Env.
->
-> Then, install the package from PyPI:
->
-> ```{.python .input}
-> pip install sxlaep                              
-> ```
->
-> Import in Python:
->
-> ```{.python .input}
-> from sxlaep import sxlaep
-> predictor = sxlaep()
-> ```
->
+Requires **Python 3.9+**. Dependencies (`numpy`, `pandas`, `scikit-learn`, `xgboost`, `joblib`) are installed automatically. Use **wheels** where possible so installs finish quickly and do not sit silent while compiling.
 
+### Install from PyPI (recommended)
 
+Use a recent `pip`, then install with binary preference:
+
+```bash
+python3 -m pip install -U "pip>=24" setuptools wheel
+python3 -m pip install --prefer-binary sxlaep
+```
+
+Inside a virtual environment, run the same commands after activating the venv.
+
+### Install with pipx (isolated CLI + `sxlaep` on your PATH)
+
+`pipx` wraps `pip` and may look “stuck” while downloading large wheels. Pass verbose logging and prefer binaries:
+
+```bash
+pipx install sxlaep --pip-args="--prefer-binary -v"
+```
+
+If downloads are slow, add an index URL inside `--pip-args`, for example:
+
+```bash
+pipx install sxlaep --pip-args="-i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn --prefer-binary -v"
+```
+
+### Install from source (development)
+
+```bash
+git clone https://github.com/labxscut/sxLaep.git
+cd sxLaep
+python3 -m pip install -U "pip>=24" setuptools wheel
+python3 -m pip install --prefer-binary -e .
+```
+
+### If install is slow or hangs
+
+- First-time resolution and wheel download can take **several minutes**; keep `-v` so you see progress.
+- **Prefer wheels** with `--prefer-binary` (commands above) to avoid long **source builds** of `xgboost`.
+- On Debian/Ubuntu, if `xgboost` still builds from source, install compilers and CMake, then retry:  
+  `sudo apt-get install -y build-essential cmake ninja-build`
+
+### Python API (after install)
+
+```python
+from sxlaep.model import load_model, predict_sequences
+
+model = load_model("enzyme_xgb_model.pkl")  # path to your trained joblib model
+df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
+# columns: pred_label, enzyme_probability
+```
 ## QUICK START
 
 > # Python API Usage #
@@ -189,7 +220,7 @@ Where:
 ## NOTES
 
 > - The pre-trained model (`enzyme_xgb_model.pkl`) is included in the package.
-> - The Python package name for installation is `sxlaep`: `pip install sxlaep`
+> - The Python package name for installation is `sxlaep` (for example: `python3 -m pip install --prefer-binary sxlaep`).
 > - Sequences containing non-standard amino acids are automatically sanitized (only the 20 standard amino acids are used).
 > - Short sequences (< 10 amino acids) may yield less reliable predictions.
 > - For large-scale predictions (>10,000 sequences), consider processing in batches or using a high-performance computing environment.

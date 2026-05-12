@@ -19,7 +19,7 @@ RUN conda create -n sxLaep_docker python=3.11 -y && \
 
 
 COPY . /tmp/sxlaep
-RUN pip install --no-cache-dir /tmp/sxlaep && \
+RUN pip install --no-cache-dir --prefer-binary /tmp/sxlaep && \
     rm -rf /tmp/sxlaep
 
 

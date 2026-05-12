@@ -174,7 +174,7 @@ Return standard binary classification metrics and report objects.
 
 Load non-enzyme and enzyme FASTA files into sequences and binary labels.
 
-### `train_enzyme_classifier(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/raep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
+### `train_enzyme_classifier(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/sxlaep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
 
 Train an enzyme/non-enzyme classifier from two FASTA files.
 
@@ -201,7 +201,7 @@ End-to-end workflows for sxLaep training and prediction.
 
 Run the complete FASTA-to-prediction sxLaep workflow.
 
-### `run_training_pipeline(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/raep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
+### `run_training_pipeline(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/sxlaep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
 
 Run the complete FASTA-to-model sxLaep training workflow.
 
