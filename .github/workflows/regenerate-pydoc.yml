@@ -1,0 +1,40 @@
+name: Regenerate PyDoc
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sxlaep/**"
+      - "scripts/generate_pydoc.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pydoc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Generate docs
+        run: python scripts/generate_pydoc.py
+
+      - name: Commit updated docs if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --staged --quiet; then
+            echo "No doc changes."
+          else
+            git commit -m "chore(docs): regenerate PyDoc"
+            git push
+          fi

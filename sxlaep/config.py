@@ -90,6 +90,6 @@ class TrainingConfig:
     test_size: float = 0.1
     random_state: int = 42
     n_jobs: int = -1
-    model_path: str = "enzyme_xgb_model.pkl"
+    model_path: str = "enzyme_xgb_model.ubj"
     report_path: str = "classification_report.txt"
     predictions_path: str = "test_predictions.csv"

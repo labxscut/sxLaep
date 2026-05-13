@@ -1,0 +1,67 @@
+# Live site (project Pages): https://labxscut.github.io/sxLaep/
+#   - Landing: https://labxscut.github.io/sxLaep/
+#   - PyDoc modules: https://labxscut.github.io/sxLaep/pydoc/ (e.g. .../pydoc/sxlaep.cli.html)
+#   - Markdown in repo tree: .../sxLaep/blob/main/docs/API_REFERENCE.md
+#
+# Triggers (automation):
+#   - push to main when docs/**, sxlaep/**, scripts/generate_pydoc.py, or this file changes
+#   - manual: Actions → "Publish GitHub Pages" → "Run workflow"
+#
+# One-time GitHub setup: Settings → Pages → Build and deployment → Source: GitHub Actions
+#   (not "Deploy from a branch"). First run may ask to approve the github-pages environment.
+
+name: Publish GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "sxlaep/**"
+      - "scripts/generate_pydoc.py"
+      - ".github/workflows/publish-github-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Regenerate API docs (PyDoc + generated markdown)
+        run: python scripts/generate_pydoc.py
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

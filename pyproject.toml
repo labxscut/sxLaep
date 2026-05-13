@@ -23,5 +23,8 @@ sxlaep = "sxlaep.cli:main"
 [tool.setuptools.packages.find]
 include = ["sxlaep*"]
 
+[tool.setuptools.package-data]
+sxlaep = ["*.ubj", "*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

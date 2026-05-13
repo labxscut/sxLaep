@@ -12,4 +12,46 @@ build/
 !.github/
 !.gitignore
 
+# Python bytecode, caches, and tooling
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage*
+htmlcov/
+.hypothesis/
+
+# Virtual environments (local)
+.venv/
+venv/
+env/
+
+# Logs, scratch, and temp files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+.cache/
+/tmp/
+/temp/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS junk
+.DS_Store
+Thumbs.db
+*~
+
+# Editors (swap / recovery)
+*.swp
+*.swo
+*.swn
+
+# pip / build metadata sometimes left in tree
+pip-wheel-metadata/

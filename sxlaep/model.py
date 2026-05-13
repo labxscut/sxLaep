@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -11,6 +12,8 @@ import pandas as pd
 from .config import DEFAULT_XGB_PARAMS, FeatureConfig
 from .fasta import read_fasta_records
 from .features import extract_feature_matrix
+
+_NATIVE_MODEL_SUFFIXES = frozenset({".json", ".ubj", ".txt"})
 
 
 def build_xgb_classifier(
@@ -30,21 +33,47 @@ def build_xgb_classifier(
 
 
 def save_model(model: Any, model_path: str | Path) -> None:
-    """Serialize a trained model with joblib."""
+    """Persist a trained XGBoost classifier.
+
+    Paths ending in ``.json`` or ``.ubj`` use XGBoost's native format
+    (``Booster.save_model``), which loads without version-skew pickle warnings.
+    For ``.pkl`` / ``.joblib``, the sklearn wrapper is saved with joblib and a
+    sibling ``.ubj`` is written when ``save_model`` is available.
+    """
 
     import joblib
 
     model_path = Path(model_path)
     model_path.parent.mkdir(parents=True, exist_ok=True)
+    save_native = getattr(model, "save_model", None)
+    suffix = model_path.suffix.lower()
+    if save_native is not None and suffix in _NATIVE_MODEL_SUFFIXES:
+        save_native(str(model_path))
+        return
     joblib.dump(model, model_path)
+    if save_native is not None and suffix in {".pkl", ".joblib"}:
+        save_native(str(model_path.with_suffix(".ubj")))
 
 
 def load_model(model_path: str | Path) -> Any:
-    """Load a joblib-serialized model."""
+    """Load an XGBoost classifier from native JSON/UBJSON or legacy joblib pickle."""
 
     import joblib
+    import xgboost as xgb
 
-    return joblib.load(model_path)
+    path = Path(model_path)
+    if path.suffix.lower() in _NATIVE_MODEL_SUFFIXES:
+        clf = xgb.XGBClassifier()
+        clf.load_model(str(path))
+        return clf
+    native = path.with_suffix(".ubj")
+    if native.is_file():
+        clf = xgb.XGBClassifier()
+        clf.load_model(str(native))
+        return clf
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="pickle")
+        return joblib.load(path)
 
 
 def predict_sequences(
