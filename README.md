@@ -125,7 +125,6 @@ python3 -m pip install --prefer-binary -e .
 ### If install is slow or hangs
 
 - First-time resolution and wheel download can take **several minutes**; keep `-v` so you see progress.
-- **`pipx install … @ git+https://…`**: pipx may sit on **determining package name** while it **clones** the repo and runs **pip in a temporary venv** to discover the distribution name—then it installs again into the real pipx venv. The first phase alone can take **many minutes** (network, dependency resolution, **xgboost** wheels or builds). Use **`pipx install --verbose …`** to see more activity; it is usually **not frozen**.
 - **Prefer wheels** with `--prefer-binary` (commands above) to avoid long **source builds** of `xgboost`.
 - On Debian/Ubuntu, if `xgboost` still builds from source, install compilers and CMake, then retry:  
   `sudo apt-get install -y build-essential cmake ninja-build`
@@ -191,7 +190,7 @@ sxlaep predict --help
 From a **clone**, optional end-user helper:
 
 - Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**.
-- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **prompts** for **GitHub `main` (default)** vs **PyPI** (or **`--git`** / **`--pypi`**; **`SXLAEP_INSTALL_SOURCE`** / **`CI=true`** skips prompts; default **git**). **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** (must end at the `tests/` segment on raw.githubusercontent.com).
+- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI** only. **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** or branch with **`SXLAEP_RAW_REF`** (default **`main`**; path must end at the `tests/` segment on raw.githubusercontent.com).
 - **Developers:** from repo root, run **`pytest tests/`**.
 
 ## REFERENCE PARAMETERS

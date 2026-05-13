@@ -17,7 +17,7 @@
 ### 3. Installation and self-test enhancement
 
 - **Original ask**: Prefer `pipx install sxlaep`; add a post-install **self-test** so users can verify the install.
-- **Status**: **Largely done** (see changelog). README recommends **pipx**; end users can run **`cd tests && ./install.sh`** (GitHub `main` vs PyPI, optional raw fetch of sample FASTAs). **Self-test** is implemented as **`pytest tests/`** (and demo test against bundled **`.ubj`**) rather than `unittest` — same intent, standard for this repo.
+- **Status**: **Largely done** (see changelog). README recommends **pipx**; end users can run **`cd tests && ./install.sh`** (optional raw fetch of sample FASTAs, then **pipx from PyPI only**). **Self-test** is implemented as **`pytest tests/`** (and demo test against bundled **`.ubj`**) rather than `unittest` — same intent, standard for this repo.
 
 ---
 
@@ -28,11 +28,11 @@ The following was implemented and should appear in the next commit to `main`:
 ### End-user install (`tests/install.sh`)
 
 - Script lives under **`tests/`**; it **`cd`s** to its directory so the working root is always **`tests/`**.
-- **`pipx`**: interactive **GitHub (`SXLAEP_GIT_REF`, default `main`)** vs **PyPI**, or **`--git` / `--pypi`**; env **`SXLAEP_INSTALL_SOURCE`**, **`CI=true`** for non-interactive defaults.
-- **Git install**: requires **`git`** on `PATH`; uses PEP **`sxlaep @ git+…`** spec; exports **`PIP_DEFAULT_TIMEOUT`** and default pip args include **`--default-timeout=120`** to reduce PyPI timeouts during dependency install.
-- **Sample FASTAs**: **`enzyme_example.fasta`** and **`noenzyme_example.fasta`** are both under **`tests/`** (no `fixtures/` path). If missing locally, they are downloaded from **`SXLAEP_RAW_BASE`** (default `raw.githubusercontent.com/.../${GIT_REF}/tests`).
-- **Network robustness**: curl uses **`--connect-timeout`**, **`--max-time`**, built-in **`--retry`**, plus an outer loop (**`SXLAEP_FETCH_RETRIES`**) with backoff; wget uses **`--timeout`** and **`--tries`** with the same outer loop. Optional env: **`SXLAEP_CURL_CONNECT_TIMEOUT`**, **`SXLAEP_CURL_MAX_TIME`**, **`SXLAEP_WGET_TIMEOUT`**.
-- **Logging**: subprocess output for **`pipx`** / **`wget`** is streamed with an **`[INFO]:`** prefix where applicable.
+- **`pipx`**: **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI only** (no git/VCS install path; avoids flaky `pip` builds from GitHub).
+- Exports **`PIP_DEFAULT_TIMEOUT`**; default pip args include **`--default-timeout=120`**.
+- **Sample FASTAs**: **`enzyme_example.fasta`** and **`noenzyme_example.fasta`** under **`tests/`**. If missing locally, downloaded from **`SXLAEP_RAW_BASE`** (default `raw.githubusercontent.com/.../<SXLAEP_RAW_REF>/tests`, ref default **`main`**).
+- **Network robustness**: curl **`--connect-timeout`**, **`--max-time`**, **`--retry`**, plus outer loop (**`SXLAEP_FETCH_RETRIES`**); wget **`--timeout`** / **`--tries`**. Optional: **`SXLAEP_CURL_CONNECT_TIMEOUT`**, **`SXLAEP_CURL_MAX_TIME`**, **`SXLAEP_WGET_TIMEOUT`**.
+- **Logging**: **`pipx`** / **`wget`** output prefixed with **`[INFO]:`** where streamed.
 
 ### Tests and layout
 
@@ -44,7 +44,7 @@ The following was implemented and should appear in the next commit to `main`:
 
 ### Docs
 
-- **`README.md`**: pipx-first install narrative; **`EXECUTABLES`** bullet documents **`cd tests && ./install.sh`**, example FASTA paths, raw **`SXLAEP_RAW_BASE`**, and **`pytest tests/`** for developers.
+- **`README.md`**: pipx-first install narrative; **`EXECUTABLES`** bullet documents **`cd tests && ./install.sh`** (PyPI-only pipx), **`SXLAEP_RAW_BASE` / `SXLAEP_RAW_REF`**, example FASTA paths, and **`pytest tests/`** for developers.
 
 ---
 
