@@ -78,12 +78,19 @@ run_cli_post_install_smoke() {
     echo "[ERROR]: enzyme_example.fasta missing; cannot run --input smoke" >&2
     exit 1
   fi
-  td="$(mktemp -d)"
+  td="$(mktemp -d)" || {
+    echo "[ERROR]: mktemp -d failed" >&2
+    exit 1
+  }
   ex="${td}/example.fasta"
   out="${td}/predictions.csv"
   cp -f "${PWD}/enzyme_example.fasta" "${ex}"
   echo "[INFO]: post-install CLI smoke (2/2): sxlaep --input example.fasta --output predictions.csv (cwd=${td})"
-  (cd "${td}" && info_stream sxlaep --input example.fasta --output predictions.csv)
+  if ! (cd "${td}" && info_stream sxlaep --input example.fasta --output predictions.csv); then
+    rm -rf "${td}"
+    echo "[ERROR]: sxlaep --input example.fasta smoke command failed" >&2
+    exit 1
+  fi
   if [[ ! -f "${out}" ]]; then
     rm -rf "${td}"
     echo "[ERROR]: expected output CSV missing: ${out}" >&2
@@ -95,10 +102,13 @@ run_cli_post_install_smoke() {
     exit 1
   fi
   echo "[INFO]: --input smoke CSV preview (first 8 lines):"
-  info_stream head -n 8 "${out}"
+  if ! info_stream head -n 8 "${out}"; then
+    rm -rf "${td}"
+    echo "[ERROR]: failed to preview smoke CSV" >&2
+    exit 1
+  fi
   rm -rf "${td}"
-  echo "[INFO]: CLI smoke (2/2) OK — sxlaep --input example.fasta succeeded."
-  echo "[INFO]: CLI smoke test PASSED — sxlaep --help and --input checks completed."
+  echo "[INFO]: CLI smoke test PASSED — sxlaep --help and --input example.fasta checks completed."
 }
 
 _fetch_one_curl() {
