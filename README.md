@@ -67,22 +67,13 @@ Then run it using the docker run command above.
 
 ## INSTALL
 
-Requires **Python 3.9+**. Dependencies (`numpy`, `pandas`, `scikit-learn`, `xgboost`, `joblib`) are installed automatically. Use **wheels** where possible so installs finish quickly and do not sit silent while compiling.
+Requires **Python 3.9+**. Dependencies (`numpy`, `pandas`, `scikit-learn`, `xgboost`, `joblib`) are pulled in automatically when you install the package.
 
-### Install from PyPI (recommended)
+### Recommended: `pipx` (CLI on your PATH, no project venv)
 
-Use a recent `pip`, then install with binary preference:
+[`pipx`](https://pypa.github.io/pipx/) installs the app into its own isolated environment and links the `sxlaep` executable onto your PATH—**you do not need to create or activate a virtualenv** for normal command-line use.
 
-```bash
-python3 -m pip install -U "pip>=24" setuptools wheel
-python3 -m pip install --prefer-binary sxlaep
-```
-
-Inside a virtual environment, run the same commands after activating the venv.
-
-### Install with pipx (isolated CLI + `sxlaep` on your PATH)
-
-`pipx` wraps `pip` and may look “stuck” while downloading large wheels. Pass verbose logging and prefer binaries:
+Install `pipx` once (if needed), then:
 
 ```bash
 pipx install sxlaep --pip-args="--prefer-binary -v"
@@ -94,7 +85,35 @@ If downloads are slow, add an index URL inside `--pip-args`, for example:
 pipx install sxlaep --pip-args="-i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn --prefer-binary -v"
 ```
 
-### Install from source (development)
+Upgrade or reinstall:
+
+```bash
+pipx upgrade sxlaep
+# or: pipx reinstall sxlaep
+```
+
+**Development from a clone** (editable install, still isolated like other `pipx` apps):
+
+```bash
+git clone https://github.com/labxscut/sxLaep.git
+cd sxLaep
+pipx install -e . --pip-args="--prefer-binary -v"
+```
+
+### Alternative: `pip` in a virtual environment (library / notebooks)
+
+Use this when you import `sxlaep` inside your own project or Jupyter and want dependencies in **your** venv—not required for the standalone CLI if you used `pipx` above.
+
+Use a recent `pip`, then install with binary preference:
+
+```bash
+python3 -m pip install -U "pip>=24" setuptools wheel
+python3 -m pip install --prefer-binary sxlaep
+```
+
+Run the same commands after activating whichever venv you use for that project.
+
+**Editable install** (optional, for development without `pipx`):
 
 ```bash
 git clone https://github.com/labxscut/sxLaep.git
@@ -115,7 +134,7 @@ python3 -m pip install --prefer-binary -e .
 ```python
 from sxlaep.model import load_model, predict_sequences
 
-model = load_model("enzyme_xgb_model.pkl")  # path to your trained joblib model
+model = load_model("enzyme_xgb_model.ubj")  # bundled native XGBoost format (or .pkl / .json)
 df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
 # columns: pred_label, enzyme_probability
 ```
@@ -148,7 +167,7 @@ df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
 
  1. The following command-line tools are available after installation:
  2. Use '--help' flag to see detailed usage for each command.
-3. Example FASTA inputs live under **`tests/fixtures/`**; run **`./test.sh`** or **`pytest tests/`** for a quick demo-style check (requires bundled `sxlaep/enzyme_xgb_model.ubj` for model tests).
+3. Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**. Run **`cd tests && ./install.sh`** — the script **anchors to `tests/`** and **downloads** those files from **GitHub raw** if they are missing, then **prompts** for **GitHub `main` (default)** vs **PyPI** (or **`--git`** / **`--pypi`**; **`SXLAEP_INSTALL_SOURCE`** / **`CI=true`** skips prompts; default **git**). **No sudo.** Override the download prefix with **`SXLAEP_RAW_BASE`** (must end at the `tests/` segment on raw.githubusercontent.com). Developers: **`pytest tests/`** from repo root.
 >
 > ```{.python .input}
 > sxlaep                           # main command-line tool for enzyme prediction
@@ -219,7 +238,7 @@ Where:
 
 ## NOTES
 
-> - The pre-trained model (`enzyme_xgb_model.pkl`) is included in the package.
+> - The pre-trained model is shipped as `enzyme_xgb_model.ubj` (XGBoost native format). Training still writes a sibling `.ubj` when you save `*.pkl` for backward compatibility.
 > - The Python package name for installation is `sxlaep` (for example: `python3 -m pip install --prefer-binary sxlaep`).
 > - Sequences containing non-standard amino acids are automatically sanitized (only the 20 standard amino acids are used).
 > - Short sequences (< 10 amino acids) may yield less reliable predictions.

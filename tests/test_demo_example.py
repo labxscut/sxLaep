@@ -1,6 +1,6 @@
-"""Demo-style smoke test: bundled model + repository FASTA fixtures.
+"""Demo-style smoke test: bundled model + repository FASTA inputs.
 
-Former `examples/*.fasta` inputs now live under ``tests/fixtures/``.
+Both ``enzyme_example.fasta`` and ``noenzyme_example.fasta`` live under ``tests/``.
 """
 
 from __future__ import annotations
@@ -9,18 +9,20 @@ from pathlib import Path
 
 import pytest
 
+from support_paths import bundled_ubj_path
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = REPO_ROOT / "tests" / "fixtures"
-BUNDLED_UBJ = REPO_ROOT / "sxlaep" / "enzyme_xgb_model.ubj"
+TESTS = REPO_ROOT / "tests"
+BUNDLED_UBJ = bundled_ubj_path()
 
 
-@pytest.mark.skipif(not BUNDLED_UBJ.is_file(), reason="bundled enzyme_xgb_model.ubj not in tree")
+@pytest.mark.skipif(BUNDLED_UBJ is None, reason="bundled enzyme_xgb_model.ubj not in installed package")
 def test_demo_predict_on_fixture_fastas():
     from sxlaep.fasta import read_fasta_records
     from sxlaep.model import load_model, predict_sequences
 
-    enzyme_fa = FIXTURES / "enzyme_example.fasta"
-    noez_fa = FIXTURES / "noenzyme_example.fasta"
+    enzyme_fa = TESTS / "enzyme_example.fasta"
+    noez_fa = TESTS / "noenzyme_example.fasta"
     assert enzyme_fa.is_file() and noez_fa.is_file()
 
     model = load_model(BUNDLED_UBJ)

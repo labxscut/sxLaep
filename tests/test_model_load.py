@@ -1,14 +1,13 @@
 """Tests for model load path (native UBJ vs legacy pickle)."""
 
-from pathlib import Path
-
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-BUNDLED_UBJ = REPO_ROOT / "sxlaep" / "enzyme_xgb_model.ubj"
+from support_paths import bundled_ubj_path
+
+BUNDLED_UBJ = bundled_ubj_path()
 
 
-@pytest.mark.skipif(not BUNDLED_UBJ.is_file(), reason="bundled enzyme_xgb_model.ubj not in tree")
+@pytest.mark.skipif(BUNDLED_UBJ is None, reason="bundled enzyme_xgb_model.ubj not in installed package")
 def test_load_native_ubj_no_warning():
     import warnings
 
