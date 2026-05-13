@@ -8,7 +8,7 @@
 <table class="heading">
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title"><a href="sxlaep.html" class="white">sxlaep</a>.model</strong></td>
-<td class="extra"><a href=".">index</a><br><a href="file:/mnt/d/work/labxscut/sxLaep/sxlaep/model.py">/mnt/d/work/labxscut/sxLaep/sxlaep/model.py</a></td></tr></table>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/runner/work/sxLaep/sxLaep/sxlaep/model.py">/home/runner/work/sxLaep/sxLaep/sxlaep/model.py</a></td></tr></table>
     <p><span class="code">Model&nbsp;construction,&nbsp;persistence,&nbsp;and&nbsp;prediction&nbsp;utilities.</span></p>
 <p>
 <table class="section">
@@ -18,17 +18,23 @@
 <tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
 <td class="singlecolumn"><table><tr><td class="multicolumn"><a href="numpy.html">numpy</a><br>
 </td><td class="multicolumn"><a href="pandas.html">pandas</a><br>
-</td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+</td><td class="multicolumn"><a href="warnings.html">warnings</a><br>
+</td><td class="multicolumn"></td></tr></table></td></tr></table><p>
 <table class="section">
 <tr class="decor functions-decor heading-text">
 <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
     
 <tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
 <td class="singlecolumn"><dl><dt><a name="-build_xgb_classifier"><strong>build_xgb_classifier</strong></a>(scale_pos_weight: 'float | None' = None, params: 'Mapping[str, Any] | None' = None)</dt><dd><span class="code">Build&nbsp;an&nbsp;XGBoost&nbsp;binary&nbsp;classifier&nbsp;for&nbsp;enzyme&nbsp;prediction.</span></dd></dl>
- <dl><dt><a name="-load_model"><strong>load_model</strong></a>(model_path: 'str | Path') -&gt; 'Any'</dt><dd><span class="code">Load&nbsp;a&nbsp;joblib-serialized&nbsp;model.</span></dd></dl>
+ <dl><dt><a name="-load_model"><strong>load_model</strong></a>(model_path: 'str | Path') -&gt; 'Any'</dt><dd><span class="code">Load&nbsp;an&nbsp;XGBoost&nbsp;classifier&nbsp;from&nbsp;native&nbsp;JSON/UBJSON&nbsp;or&nbsp;legacy&nbsp;joblib&nbsp;pickle.</span></dd></dl>
  <dl><dt><a name="-predict_fasta"><strong>predict_fasta</strong></a>(model_path: 'str | Path', fasta_path: 'str | Path', output_csv: 'str | Path', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load&nbsp;a&nbsp;model,&nbsp;predict&nbsp;a&nbsp;FASTA&nbsp;file,&nbsp;and&nbsp;write&nbsp;predictions&nbsp;to&nbsp;CSV.</span></dd></dl>
  <dl><dt><a name="-predict_sequences"><strong>predict_sequences</strong></a>(model: 'Any', sequences: 'Sequence[str]', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Predict&nbsp;enzyme&nbsp;probabilities&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;protein&nbsp;sequences.</span></dd></dl>
- <dl><dt><a name="-save_model"><strong>save_model</strong></a>(model: 'Any', model_path: 'str | Path') -&gt; 'None'</dt><dd><span class="code">Serialize&nbsp;a&nbsp;trained&nbsp;model&nbsp;with&nbsp;joblib.</span></dd></dl>
+ <dl><dt><a name="-save_model"><strong>save_model</strong></a>(model: 'Any', model_path: 'str | Path') -&gt; 'None'</dt><dd><span class="code">Persist&nbsp;a&nbsp;trained&nbsp;XGBoost&nbsp;classifier.<br>
+&nbsp;<br>
+Paths&nbsp;ending&nbsp;in&nbsp;``.json``&nbsp;or&nbsp;``.ubj``&nbsp;use&nbsp;XGBoost's&nbsp;native&nbsp;format<br>
+(``Booster.save_model``),&nbsp;which&nbsp;loads&nbsp;without&nbsp;version-skew&nbsp;pickle&nbsp;warnings.<br>
+For&nbsp;``.pkl``&nbsp;/&nbsp;``.joblib``,&nbsp;the&nbsp;sklearn&nbsp;wrapper&nbsp;is&nbsp;saved&nbsp;with&nbsp;joblib&nbsp;and&nbsp;a<br>
+sibling&nbsp;``.ubj``&nbsp;is&nbsp;written&nbsp;when&nbsp;``save_model``&nbsp;is&nbsp;available.</span></dd></dl>
 </td></tr></table><p>
 <table class="section">
 <tr class="decor data-decor heading-text">

@@ -144,7 +144,7 @@ Build an XGBoost binary classifier for enzyme prediction.
 
 ### `load_model(model_path: 'str | Path') -> 'Any'`
 
-Load a joblib-serialized model.
+Load an XGBoost classifier from native JSON/UBJSON or legacy joblib pickle.
 
 ### `predict_fasta(model_path: 'str | Path', fasta_path: 'str | Path', output_csv: 'str | Path', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -> 'pd.DataFrame'`
 
@@ -156,7 +156,12 @@ Predict enzyme probabilities for a list of protein sequences.
 
 ### `save_model(model: 'Any', model_path: 'str | Path') -> 'None'`
 
-Serialize a trained model with joblib.
+Persist a trained XGBoost classifier.
+
+Paths ending in ``.json`` or ``.ubj`` use XGBoost's native format
+(``Booster.save_model``), which loads without version-skew pickle warnings.
+For ``.pkl`` / ``.joblib``, the sklearn wrapper is saved with joblib and a
+sibling ``.ubj`` is written when ``save_model`` is available.
 
 ## `sxlaep.training`
 

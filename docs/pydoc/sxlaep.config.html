@@ -8,7 +8,7 @@
 <table class="heading">
 <tr class="heading-text decor">
 <td class="title">&nbsp;<br><strong class="title"><a href="sxlaep.html" class="white">sxlaep</a>.config</strong></td>
-<td class="extra"><a href=".">index</a><br><a href="file:/mnt/d/work/labxscut/sxLaep/sxlaep/config.py">/mnt/d/work/labxscut/sxLaep/sxlaep/config.py</a></td></tr></table>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/runner/work/sxLaep/sxLaep/sxlaep/config.py">/home/runner/work/sxLaep/sxLaep/sxlaep/config.py</a></td></tr></table>
     <p><span class="code">Configuration&nbsp;objects&nbsp;and&nbsp;biochemical&nbsp;constants&nbsp;used&nbsp;by&nbsp;sxLaep.</span></p>
 <p>
 <table class="section">
@@ -75,7 +75,7 @@ Data and other attributes defined here:<br>
 
 <dl><dt><strong>__dataclass_fields__</strong> = {'add_length': Field(name='add_length',type='bool',default=True...appingproxy({}),kw_only=False,_field_type=_FIELD), 'lag': Field(name='lag',type='int',default=10,default_f...appingproxy({}),kw_only=False,_field_type=_FIELD), 'n_segments': Field(name='n_segments',type='int',default=3,def...appingproxy({}),kw_only=False,_field_type=_FIELD), 'properties': Field(name='properties',type='Mapping[str, Mappi...appingproxy({}),kw_only=False,_field_type=_FIELD), 'weight': Field(name='weight',type='float',default=0.05,de...appingproxy({}),kw_only=False,_field_type=_FIELD)}</dl>
 
-<dl><dt><strong>__dataclass_params__</strong> = _DataclassParams(init=True,repr=True,eq=True,ord...rue,kw_only=False,slots=False,weakref_slot=False)</dl>
+<dl><dt><strong>__dataclass_params__</strong> = _DataclassParams(init=True,repr=True,eq=True,order=False,unsafe_hash=False,frozen=True)</dl>
 
 <dl><dt><strong>__match_args__</strong> = ('lag', 'weight', 'n_segments', 'add_length', 'properties')</dl>
 
@@ -93,7 +93,7 @@ Data and other attributes defined here:<br>
 <td class="section-title" colspan=3>&nbsp;<br><a name="TrainingConfig">class <strong>TrainingConfig</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
     
 <tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
-<td class="decor title-decor" colspan=2><span class="code"><a href="#TrainingConfig">TrainingConfig</a>(test_size:&nbsp;'float'&nbsp;=&nbsp;0.1,&nbsp;random_state:&nbsp;'int'&nbsp;=&nbsp;42,&nbsp;n_jobs:&nbsp;'int'&nbsp;=&nbsp;-1,&nbsp;model_path:&nbsp;'str'&nbsp;=&nbsp;'enzyme_xgb_model.pkl',&nbsp;report_path:&nbsp;'str'&nbsp;=&nbsp;'classification_report.txt',&nbsp;predictions_path:&nbsp;'str'&nbsp;=&nbsp;'test_predictions.csv')&nbsp;-&amp;gt;&nbsp;None<br>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#TrainingConfig">TrainingConfig</a>(test_size:&nbsp;'float'&nbsp;=&nbsp;0.1,&nbsp;random_state:&nbsp;'int'&nbsp;=&nbsp;42,&nbsp;n_jobs:&nbsp;'int'&nbsp;=&nbsp;-1,&nbsp;model_path:&nbsp;'str'&nbsp;=&nbsp;'enzyme_xgb_model.ubj',&nbsp;report_path:&nbsp;'str'&nbsp;=&nbsp;'classification_report.txt',&nbsp;predictions_path:&nbsp;'str'&nbsp;=&nbsp;'test_predictions.csv')&nbsp;-&amp;gt;&nbsp;None<br>
 &nbsp;<br>
 Training&nbsp;configuration&nbsp;for&nbsp;enzyme/non-enzyme&nbsp;classification.<br>&nbsp;</span></td></tr>
 <tr><td>&nbsp;</td>
@@ -104,7 +104,7 @@ Training&nbsp;configuration&nbsp;for&nbsp;enzyme/non-enzyme&nbsp;classification.
 
 <dl><dt><a name="TrainingConfig-__hash__"><strong>__hash__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;hash(self).</span></dd></dl>
 
-<dl><dt><a name="TrainingConfig-__init__"><strong>__init__</strong></a>(self, test_size: 'float' = 0.1, random_state: 'int' = 42, n_jobs: 'int' = -1, model_path: 'str' = 'enzyme_xgb_model.pkl', report_path: 'str' = 'classification_report.txt', predictions_path: 'str' = 'test_predictions.csv') -&gt; None</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+<dl><dt><a name="TrainingConfig-__init__"><strong>__init__</strong></a>(self, test_size: 'float' = 0.1, random_state: 'int' = 42, n_jobs: 'int' = -1, model_path: 'str' = 'enzyme_xgb_model.ubj', report_path: 'str' = 'classification_report.txt', predictions_path: 'str' = 'test_predictions.csv') -&gt; None</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
 
 <dl><dt><a name="TrainingConfig-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;repr(self).</span></dd></dl>
 
@@ -124,11 +124,11 @@ Data and other attributes defined here:<br>
 
 <dl><dt><strong>__dataclass_fields__</strong> = {'model_path': Field(name='model_path',type='str',default='enzy...appingproxy({}),kw_only=False,_field_type=_FIELD), 'n_jobs': Field(name='n_jobs',type='int',default=-1,defaul...appingproxy({}),kw_only=False,_field_type=_FIELD), 'predictions_path': Field(name='predictions_path',type='str',default...appingproxy({}),kw_only=False,_field_type=_FIELD), 'random_state': Field(name='random_state',type='int',default=42,...appingproxy({}),kw_only=False,_field_type=_FIELD), 'report_path': Field(name='report_path',type='str',default='cla...appingproxy({}),kw_only=False,_field_type=_FIELD), 'test_size': Field(name='test_size',type='float',default=0.1,...appingproxy({}),kw_only=False,_field_type=_FIELD)}</dl>
 
-<dl><dt><strong>__dataclass_params__</strong> = _DataclassParams(init=True,repr=True,eq=True,ord...rue,kw_only=False,slots=False,weakref_slot=False)</dl>
+<dl><dt><strong>__dataclass_params__</strong> = _DataclassParams(init=True,repr=True,eq=True,order=False,unsafe_hash=False,frozen=True)</dl>
 
 <dl><dt><strong>__match_args__</strong> = ('test_size', 'random_state', 'n_jobs', 'model_path', 'report_path', 'predictions_path')</dl>
 
-<dl><dt><strong>model_path</strong> = 'enzyme_xgb_model.pkl'</dl>
+<dl><dt><strong>model_path</strong> = 'enzyme_xgb_model.ubj'</dl>
 
 <dl><dt><strong>n_jobs</strong> = -1</dl>
 
