@@ -92,6 +92,29 @@ pipx upgrade sxlaep
 # or: pipx reinstall sxlaep
 ```
 
+### Optional: `pipx` install from GitHub (latest `main`)
+
+Use this when you need **commits not yet published to PyPI**. You must have **`git`** installed and on your **`PATH`** (pip clones the repository).
+
+This path is **more fragile** than PyPI: pipx may appear to hang on **determining package name** while it installs into a **temporary** virtual environment to discover the distribution name, then installs again into the real pipx venv. Dependency resolution and **xgboost** wheels or source builds can take **many minutes**. Use **`--verbose`** so you can see progress.
+
+```bash
+export PIP_DEFAULT_TIMEOUT=120
+pipx install --verbose --force "sxlaep @ git+https://github.com/labxscut/sxLaep.git@main" \
+  --pip-args="--prefer-binary -v --default-timeout=120"
+```
+
+To track a **different branch or tag**, change the trailing **`@main`** (for example **`@develop`** or **`@v1.0.0`**).
+
+Equivalent VCS URL form (some users prefer this):
+
+```bash
+pipx install --verbose --force "git+https://github.com/labxscut/sxLaep.git@main" \
+  --pip-args="--prefer-binary -v --default-timeout=120"
+```
+
+To **refresh** an existing git-based install, re-run the same command with **`--force`**. To go back to the **PyPI** build, use **`pipx uninstall sxlaep`** then **`pipx install sxlaep`** as in the recommended section above.
+
 **Development from a clone** (editable install, still isolated like other `pipx` apps):
 
 ```bash
@@ -125,6 +148,7 @@ python3 -m pip install --prefer-binary -e .
 ### If install is slow or hangs
 
 - First-time resolution and wheel download can take **several minutes**; keep `-v` so you see progress.
+- **`pipx install … @ git+https://…`** (GitHub method above): pipx may sit on **determining package name** while it **clones** the repo and runs **pip** in a temporary venv, then repeats work in the final venv—use **`--verbose`** and a generous **`PIP_DEFAULT_TIMEOUT`** / **`--default-timeout`** (as in the examples).
 - **Prefer wheels** with `--prefer-binary` (commands above) to avoid long **source builds** of `xgboost`.
 - On Debian/Ubuntu, if `xgboost` still builds from source, install compilers and CMake, then retry:  
   `sudo apt-get install -y build-essential cmake ninja-build`
