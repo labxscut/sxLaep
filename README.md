@@ -148,7 +148,7 @@ df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
 
  1. The following command-line tools are available after installation:
  2. Use '--help' flag to see detailed usage for each command.
-3. Examples are available in 'examples/' directory.
+3. Example FASTA inputs live under **`tests/fixtures/`**; run **`./test.sh`** or **`pytest tests/`** for a quick demo-style check (requires bundled `sxlaep/enzyme_xgb_model.ubj` for model tests).
 >
 > ```{.python .input}
 > sxlaep                           # main command-line tool for enzyme prediction
