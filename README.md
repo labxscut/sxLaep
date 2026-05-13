@@ -199,6 +199,14 @@ Prediction (writes a CSV):
 sxlaep predict --model path/to/model.pkl --fasta sequences.fasta --output predictions.csv
 ```
 
+**Shorthand** (bundled **`enzyme_xgb_model.ubj`** in the installed package; no **`train`** / **`predict`** subcommand):
+
+```bash
+sxlaep --input sequences.fasta --output predictions.csv
+# or: sxlaep -i sequences.fasta -o predictions.csv
+# default output if -o omitted: sxlaep_predictions.csv in the current directory
+```
+
 Help:
 
 ```bash
@@ -209,12 +217,12 @@ sxlaep predict --help
 
 ## EXECUTABLES
 
-- **`sxlaep`** — CLI with subcommands **`train`** and **`predict`** (see **Quick start** above). Use **`--help`** on each subcommand for options.
+- **`sxlaep`** — CLI: subcommands **`train`** and **`predict`**, or shorthand **`sxlaep --input`** / **`-i`** (bundled model) with **`--output`** / **`-o`** (see **Quick start**). Use **`--help`** for global and subcommand options.
 
 From a **clone**, optional end-user helper:
 
 - Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**.
-- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI** only, then runs **`sxlaep --help`** to verify the CLI entrypoint (set **`SXLAEP_SKIP_CLI_SMOKE=1`** to skip). **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** or branch with **`SXLAEP_RAW_REF`** (default **`main`**; path must end at the `tests/` segment on raw.githubusercontent.com).
+- Run **`cd tests && ./install.sh`**: **downloads** missing FASTAs when needed, **`pipx install`** or **`pipx upgrade`** from **PyPI**, then runs **`sxlaep --help`** and **`sxlaep --input example.fasta`** (copy of **`enzyme_example.fasta`** in a temp directory), prints a **short CSV preview**, and reports success (set **`SXLAEP_SKIP_CLI_SMOKE=1`** to skip). **No sudo.** Override raw URLs with **`SXLAEP_RAW_BASE`** / **`SXLAEP_RAW_REF`** (default **`main`**).
 - **Developers:** from repo root, run **`pytest tests/`**.
 
 ## REFERENCE PARAMETERS
@@ -230,6 +238,13 @@ From a **clone**, optional end-user helper:
 | `properties` | dict | PROPERTIES | Amino-acid physicochemical property tables used by pseudo-AAC. Default includes: hydrophobicity (HYDRO), polarity (POLAR), and charge (CHARGE). |
 
 ### Command line arguments
+
+#### Shorthand `sxlaep --input` (bundled model)
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `--input`, `-i` | Yes | Input FASTA path (uses packaged **`enzyme_xgb_model.ubj`**). Do not combine with **`train`** or **`predict`**. |
+| `--output`, `-o` | No | Output CSV path (default **`sxlaep_predictions.csv`** in the current working directory). |
 
 #### `sxlaep train`
 
@@ -252,7 +267,7 @@ From a **clone**, optional end-user helper:
 
 ### Output file formats
 
-#### CSV output (`sxlaep predict`)
+#### CSV output (`sxlaep predict` or `sxlaep --input`)
 
 The prediction CSV includes (among others) identifier columns plus scores:
 
@@ -282,6 +297,12 @@ print(df[["sequence_id", "pred_label", "enzyme_probability"]].head())
 
 ```bash
 sxlaep predict --model enzyme_xgb_model.pkl --fasta proteins.fasta --output predictions.csv
+```
+
+With the **bundled** model (after **`pipx install sxlaep`**, from any directory):
+
+```bash
+sxlaep --input proteins.fasta --output predictions.csv
 ```
 
 ## NOTES

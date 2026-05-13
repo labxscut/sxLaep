@@ -5,7 +5,7 @@
 #
 # - Downloads sample FASTAs from GitHub raw if missing in this folder.
 # - Installs or upgrades sxlaep with pipx from PyPI only (reliable wheels).
-# - Runs sxlaep --help after install to verify the CLI entrypoint (skip: SXLAEP_SKIP_CLI_SMOKE=1).
+# - Runs sxlaep --help and sxlaep --input example.fasta (bundled model) after install (skip: SXLAEP_SKIP_CLI_SMOKE=1).
 # No sudo. For unit tests: pytest tests/ from repo root.
 #
 set -euo pipefail
@@ -35,7 +35,8 @@ Usage (run from tests/):
 
 Installs or upgrades sxlaep via pipx from PyPI. Sample FASTAs are downloaded
 from GitHub raw into this directory if missing. After install, runs
-sxlaep --help to verify the CLI (set SXLAEP_SKIP_CLI_SMOKE=1 to skip).
+sxlaep --help then sxlaep --input example.fasta (copy of enzyme_example.fasta
+in a temp dir) and shows a short CSV preview (set SXLAEP_SKIP_CLI_SMOKE=1 to skip).
 
 Environment (optional):
   SXLAEP_RAW_BASE       Override raw URL prefix (must end at .../tests)
@@ -43,7 +44,7 @@ Environment (optional):
   SXLAEP_PIP_ARGS       Extra args for pip inside pipx (shlex-split string)
   PIP_DEFAULT_TIMEOUT   Seconds for pip (default: 120)
   SXLAEP_FETCH_RETRIES, SXLAEP_CURL_CONNECT_TIMEOUT, SXLAEP_CURL_MAX_TIME, SXLAEP_WGET_TIMEOUT
-  SXLAEP_SKIP_CLI_SMOKE   set to 1 to skip post-install sxlaep --help smoke test
+  SXLAEP_SKIP_CLI_SMOKE   set to 1 to skip post-install sxlaep --help and --input smoke tests
 EOF
 }
 
@@ -68,9 +69,36 @@ info_stream() {
 }
 
 run_cli_post_install_smoke() {
-  echo "[INFO]: post-install CLI smoke: sxlaep --help"
+  local td out ex
+  echo "[INFO]: post-install CLI smoke (1/2): sxlaep --help"
   info_stream sxlaep --help
-  echo "[INFO]: CLI smoke test PASSED — sxlaep entrypoint runs (--help succeeded)."
+  echo "[INFO]: CLI smoke (1/2) OK — sxlaep --help succeeded."
+
+  if [[ ! -f "${PWD}/enzyme_example.fasta" ]]; then
+    echo "[ERROR]: enzyme_example.fasta missing; cannot run --input smoke" >&2
+    exit 1
+  fi
+  td="$(mktemp -d)"
+  ex="${td}/example.fasta"
+  out="${td}/predictions.csv"
+  cp -f "${PWD}/enzyme_example.fasta" "${ex}"
+  echo "[INFO]: post-install CLI smoke (2/2): sxlaep --input example.fasta --output predictions.csv (cwd=${td})"
+  (cd "${td}" && info_stream sxlaep --input example.fasta --output predictions.csv)
+  if [[ ! -f "${out}" ]]; then
+    rm -rf "${td}"
+    echo "[ERROR]: expected output CSV missing: ${out}" >&2
+    exit 1
+  fi
+  if ! grep -q pred_label "${out}"; then
+    rm -rf "${td}"
+    echo "[ERROR]: --input run produced CSV without pred_label column" >&2
+    exit 1
+  fi
+  echo "[INFO]: --input smoke CSV preview (first 8 lines):"
+  info_stream head -n 8 "${out}"
+  rm -rf "${td}"
+  echo "[INFO]: CLI smoke (2/2) OK — sxlaep --input example.fasta succeeded."
+  echo "[INFO]: CLI smoke test PASSED — sxlaep --help and --input checks completed."
 }
 
 _fetch_one_curl() {

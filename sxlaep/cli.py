@@ -3,16 +3,44 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 from .config import FeatureConfig, TrainingConfig
 from .pipeline import run_prediction_pipeline, run_training_pipeline
+
+
+def _bundled_ubj_path() -> Path:
+    """Path to packaged native XGBoost model (wheel / pipx layout)."""
+
+    import sxlaep
+
+    p = Path(sxlaep.__file__).resolve().parent / "enzyme_xgb_model.ubj"
+    if not p.is_file():
+        raise SystemExit(f"Bundled model not found at {p} (expected pip/wheel install).")
+    return p
 
 
 def build_parser() -> argparse.ArgumentParser:
     """Build the sxLaep command-line argument parser."""
 
     parser = argparse.ArgumentParser(description="sxLaep enzyme/non-enzyme classifier")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser.add_argument(
+        "-i",
+        "--input",
+        dest="simple_fasta",
+        metavar="FASTA",
+        default=None,
+        help="Shorthand: predict with the bundled model on this FASTA (no train/predict subcommand).",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="simple_output",
+        metavar="CSV",
+        default=None,
+        help="With --input only: output CSV path (default: sxlaep_predictions.csv in the current directory).",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=False)
 
     train = subparsers.add_parser("train", help="train an sxLaep classifier")
     train.add_argument("--noenzyme-fasta", required=True, help="FASTA file for non-enzyme proteins")
@@ -39,6 +67,27 @@ def main(argv: list[str] | None = None) -> None:
 
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.simple_fasta is not None:
+        if args.command is not None:
+            parser.error("Do not combine --input/--output with train or predict; use one style only.")
+        fasta = Path(args.simple_fasta)
+        if not fasta.is_file():
+            raise SystemExit(f"Input FASTA not found: {fasta}")
+        out = Path(args.simple_output) if args.simple_output else Path.cwd() / "sxlaep_predictions.csv"
+        model = _bundled_ubj_path()
+        result = run_prediction_pipeline(
+            model_path=model,
+            fasta_path=fasta,
+            output_csv=out,
+            n_jobs=1,
+        )
+        print(f"Predictions saved to {out}. Rows: {len(result)}")
+        return
+
+    if args.command is None:
+        parser.print_help()
+        raise SystemExit(2)
 
     if args.command == "train":
         feature_config = FeatureConfig(lag=args.lag, weight=args.weight, n_segments=args.segments)
