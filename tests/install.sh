@@ -225,7 +225,8 @@ if [[ "${SOURCE}" == "git" ]]; then
   _git_url="${GIT_URL#git+}"
   GIT_PIP_SPEC="sxlaep @ git+${_git_url}@${GIT_REF}"
   echo "[INFO]: pip spec: ${GIT_PIP_SPEC}"
-  info_stream pipx install --force "${GIT_PIP_SPEC}" --pip-args "${PIP_ARGS}"
+  echo "[INFO]: pipx may sit on 'determining package name' for several minutes: it clones the repo and runs pip in a temporary venv (deps, wheels). Not frozen unless CPU/network are idle for 20+ min."
+  info_stream pipx install --verbose --force "${GIT_PIP_SPEC}" --pip-args "${PIP_ARGS}"
 else
   echo "[INFO]: checking existing pipx installs (pipx list --short)"
   PIPX_LIST_OUT="$(pipx list --short 2>&1 || true)"
@@ -236,10 +237,10 @@ else
   fi
   if printf '%s\n' "${PIPX_LIST_OUT}" | awk '{print $1}' | grep -qx sxlaep; then
     echo "[INFO]: sxlaep already listed; upgrading from PyPI"
-    info_stream pipx upgrade sxlaep --pip-args "${PIP_ARGS}" || info_stream pipx install sxlaep --pip-args "${PIP_ARGS}"
+    info_stream pipx upgrade --verbose sxlaep --pip-args "${PIP_ARGS}" || info_stream pipx install --verbose sxlaep --pip-args "${PIP_ARGS}"
   else
     echo "[INFO]: sxlaep not listed; installing from PyPI"
-    info_stream pipx install sxlaep --pip-args "${PIP_ARGS}"
+    info_stream pipx install --verbose sxlaep --pip-args "${PIP_ARGS}"
   fi
 fi
 

@@ -125,54 +125,74 @@ python3 -m pip install --prefer-binary -e .
 ### If install is slow or hangs
 
 - First-time resolution and wheel download can take **several minutes**; keep `-v` so you see progress.
+- **`pipx install … @ git+https://…`**: pipx may sit on **determining package name** while it **clones** the repo and runs **pip in a temporary venv** to discover the distribution name—then it installs again into the real pipx venv. The first phase alone can take **many minutes** (network, dependency resolution, **xgboost** wheels or builds). Use **`pipx install --verbose …`** to see more activity; it is usually **not frozen**.
 - **Prefer wheels** with `--prefer-binary` (commands above) to avoid long **source builds** of `xgboost`.
 - On Debian/Ubuntu, if `xgboost` still builds from source, install compilers and CMake, then retry:  
   `sudo apt-get install -y build-essential cmake ninja-build`
 
 ### Python API (after install)
 
-```python
-from sxlaep.model import load_model, predict_sequences
+See **Quick start** below for `load_model` / `predict_sequences` and `run_prediction_pipeline`.
 
-model = load_model("enzyme_xgb_model.ubj")  # bundled native XGBoost format (or .pkl / .json)
-df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
-# columns: pred_label, enzyme_probability
-```
 ## QUICK START
 
-> # Python API Usage #
->
-> ```{.python .input}
-> from sxlaep import sxlaep
->
-> # Initialize predictor
-> predictor = sxlaep()
->
-> # Single sequence prediction
-> pred = predictor.predict("MKVLW...")           # Returns: 0 (Non-Enzyme) or 1 (Enzyme)
-> prob = predictor.predict_proba("MKVLW...")       # Returns: float (0.0 ~ 1.0)
->
-> # FASTA file prediction
-> results = predictor.predict_fasta("sequences.fasta")
-> # Returns: {seq_id: {'prediction': int, 'probability': float}}
-> ```
+### Python API
 
-> # Command Line Usage #
->
-> ```{.python .input}
-> sxlaep --input sequences.fasta --output predictions.json
-> ```
+```python
+from pathlib import Path
+
+import sxlaep
+from sxlaep.model import load_model, predict_sequences
+
+ubj = Path(sxlaep.__file__).resolve().parent / "enzyme_xgb_model.ubj"
+model = load_model(ubj)
+df = predict_sequences(model, ["MKVLWALIFLLKSAF"])
+# columns: pred_label, enzyme_probability
+```
+
+FASTA to CSV in one call:
+
+```python
+from sxlaep import run_prediction_pipeline
+
+run_prediction_pipeline(
+    model_path="path/to/model.pkl",  # or .ubj / .joblib
+    fasta_path="sequences.fasta",
+    output_csv="predictions.csv",
+)
+```
+
+### Command line
+
+Training:
+
+```bash
+sxlaep train --noenzyme-fasta neg.fasta --enzyme-fasta pos.fasta --outdir results/sxlaep_training
+```
+
+Prediction (writes a CSV):
+
+```bash
+sxlaep predict --model path/to/model.pkl --fasta sequences.fasta --output predictions.csv
+```
+
+Help:
+
+```bash
+sxlaep --help
+sxlaep train --help
+sxlaep predict --help
+```
 
 ## EXECUTABLES
 
- 1. The following command-line tools are available after installation:
- 2. Use '--help' flag to see detailed usage for each command.
-3. Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**. Run **`cd tests && ./install.sh`** — the script **anchors to `tests/`** and **downloads** those files from **GitHub raw** if they are missing, then **prompts** for **GitHub `main` (default)** vs **PyPI** (or **`--git`** / **`--pypi`**; **`SXLAEP_INSTALL_SOURCE`** / **`CI=true`** skips prompts; default **git**). **No sudo.** Override the download prefix with **`SXLAEP_RAW_BASE`** (must end at the `tests/` segment on raw.githubusercontent.com). Developers: **`pytest tests/`** from repo root.
->
-> ```{.python .input}
-> sxlaep                           # main command-line tool for enzyme prediction
->                                # Usage: sxlaep --input <fasta> --output <json>
-> ```
+- **`sxlaep`** — CLI with subcommands **`train`** and **`predict`** (see **Quick start** above). Use **`--help`** on each subcommand for options.
+
+From a **clone**, optional end-user helper:
+
+- Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**.
+- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **prompts** for **GitHub `main` (default)** vs **PyPI** (or **`--git`** / **`--pypi`**; **`SXLAEP_INSTALL_SOURCE`** / **`CI=true`** skips prompts; default **git**). **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** (must end at the `tests/` segment on raw.githubusercontent.com).
+- **Developers:** from repo root, run **`pytest tests/`**.
 
 ## REFERENCE PARAMETERS
 
@@ -186,55 +206,60 @@ df = predict_sequences(model, ["MKVLWVLFLAAIL..."])
 | `add_length` | bool | True | Whether to append raw sequence length to the feature vector. Provides additional size information that may be correlated with enzyme function. |
 | `properties` | dict | PROPERTIES | Amino-acid physicochemical property tables used by pseudo-AAC. Default includes: hydrophobicity (HYDRO), polarity (POLAR), and charge (CHARGE). |
 
-### Command Line Arguments
+### Command line arguments
 
-#### `sxlaep` Command
+#### `sxlaep train`
 
 | Argument | Required | Description |
 |----------|----------|-------------|
-| `--input`, `-i` | Yes | Input FASTA file path containing protein sequences to predict. |
-| `--output`, `-o` | Yes | Output JSON file path for prediction results. |
+| `--noenzyme-fasta` | Yes | FASTA path for non-enzyme (negative) sequences. |
+| `--enzyme-fasta` | Yes | FASTA path for enzyme (positive) sequences. |
+| `--outdir` | No | Training output directory (default `results/sxlaep_training`). |
+| `--lag`, `--weight`, `--segments` | No | Feature knobs (pseudo-AAC lag/weight, window-AAC segments). |
+| `--test-size`, `--seed`, `--n-jobs` | No | Holdout fraction, RNG seed, parallelism. |
 
-### Output File Formats
+#### `sxlaep predict`
 
-#### JSON Output
-```json
-{
-  "seq_id_1": {
-    "prediction": 1,
-    "probability": 0.876
-  },
-  "seq_id_2": {
-    "prediction": 0,
-    "probability": 0.234
-  }
-}
-```
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `--model` | Yes | Trained model path (`.pkl` / `.joblib` / native `.ubj` as supported by `load_model`). |
+| `--fasta` | Yes | Input FASTA path. |
+| `--output` | No | Output CSV path (default `results/predictions.csv`). |
+| `--n-jobs` | No | Parallel workers for feature extraction (default `1`). |
 
-Where:
-- `prediction`: 0 = Non-Enzyme, 1 = Enzyme
-- `probability`: Enzyme probability score (0.0 ~ 1.0)
+### Output file formats
+
+#### CSV output (`sxlaep predict`)
+
+The prediction CSV includes (among others) identifier columns plus scores:
+
+| Column | Description |
+|--------|-------------|
+| `sequence_id` | FASTA record id (first token of the header). |
+| `description` | Full header line after `>`. |
+| `pred_label` | `0` = non-enzyme, `1` = enzyme. |
+| `enzyme_probability` | Estimated probability of enzyme class (when available from the model). |
 
 ## EXAMPLES
 
+### Batch FASTA processing (Python)
 
-> # Batch FASTA Processing #
->
-> ```{.python .input}
-> from sxlaep import sxlaep
->
-> predictor = sxlaep()
-> results = predictor.predict_fasta("proteins.fasta")
->
-> for seq_id, result in results.items():
->     print(f"{seq_id}: {'Enzyme' if result['prediction'] == 1 else 'Non-Enzyme'} (p={result['probability']:.3f})")
-> ```
->
-> # Command Line Usage #
->
-> ```{.python .input}
-> sxlaep --input proteins.fasta --output predictions.json
-> ```
+```python
+from sxlaep import run_prediction_pipeline
+
+df = run_prediction_pipeline(
+    model_path="enzyme_xgb_model.pkl",
+    fasta_path="proteins.fasta",
+    output_csv="predictions.csv",
+)
+print(df[["sequence_id", "pred_label", "enzyme_probability"]].head())
+```
+
+### Same task from the shell
+
+```bash
+sxlaep predict --model enzyme_xgb_model.pkl --fasta proteins.fasta --output predictions.csv
+```
 
 ## NOTES
 
