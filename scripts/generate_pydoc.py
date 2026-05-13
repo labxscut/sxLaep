@@ -124,7 +124,7 @@ Save model, predictions, report, and feature names
 ## Training example
 
 ```bash
-python main.py train \
+python scripts/main.py train \
   --noenzyme-fasta data/noenzyme.fasta \
   --enzyme-fasta data/enzyme.fasta \
   --outdir results/raep_training
@@ -133,8 +133,8 @@ python main.py train \
 ## Prediction example
 
 ```bash
-python main.py predict \
-  --model results/raep_training/enzyme_xgb_model.pkl \
+python scripts/main.py predict \
+  --model results/raep_training/enzyme_xgb_model.ubj \
   --fasta data/query.fasta \
   --output results/query_predictions.csv
 ```

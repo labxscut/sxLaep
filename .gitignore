@@ -1,0 +1,15 @@
+# setuptools / pip build artifacts
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Dotfiles and dot-directories at any path depth (any subdir or repo root)
+**/.*
+**/.*/
+
+!.github/
+!.gitignore
+
+__pycache__/
