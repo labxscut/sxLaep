@@ -5,6 +5,7 @@
 #
 # - Downloads sample FASTAs from GitHub raw if missing in this folder.
 # - Installs or upgrades sxlaep with pipx from PyPI only (reliable wheels).
+# - Runs sxlaep predict on example FASTAs and checks CSV output (skip: SXLAEP_SKIP_CLI_SMOKE=1).
 # No sudo. For unit tests: pytest tests/ from repo root.
 #
 set -euo pipefail
@@ -33,7 +34,9 @@ Usage (run from tests/):
   cd tests && ./install.sh
 
 Installs or upgrades sxlaep via pipx from PyPI. Sample FASTAs are downloaded
-from GitHub raw into this directory if missing.
+from GitHub raw into this directory if missing. After install, runs
+sxlaep predict on both example FASTAs and checks the CSV (set
+SXLAEP_SKIP_CLI_SMOKE=1 to skip).
 
 Environment (optional):
   SXLAEP_RAW_BASE       Override raw URL prefix (must end at .../tests)
@@ -41,6 +44,7 @@ Environment (optional):
   SXLAEP_PIP_ARGS       Extra args for pip inside pipx (shlex-split string)
   PIP_DEFAULT_TIMEOUT   Seconds for pip (default: 120)
   SXLAEP_FETCH_RETRIES, SXLAEP_CURL_CONNECT_TIMEOUT, SXLAEP_CURL_MAX_TIME, SXLAEP_WGET_TIMEOUT
+  SXLAEP_SKIP_CLI_SMOKE   set to 1 to skip post-install sxlaep predict smoke test
 EOF
 }
 
@@ -62,6 +66,50 @@ info_stream() {
   fi
   _st="${PIPESTATUS[0]:-0}"
   return "${_st}"
+}
+
+_bundled_ubj_path() {
+  local py="${PIPX_HOME}/venvs/sxlaep/bin/python"
+  if [[ ! -x "${py}" ]]; then
+    return 1
+  fi
+  "${py}" -c 'import pathlib, sxlaep; p = pathlib.Path(sxlaep.__file__).resolve().parent / "enzyme_xgb_model.ubj"; print(p) if p.is_file() else (__import__("sys").exit(1))'
+}
+
+run_cli_post_install_smoke() {
+  local model out_enz out_nez enz nez n suf
+  enz="${PWD}/enzyme_example.fasta"
+  nez="${PWD}/noenzyme_example.fasta"
+  if [[ ! -f "${enz}" || ! -f "${nez}" ]]; then
+    echo "[ERROR]: example FASTAs missing for CLI smoke test: ${enz} and ${nez}" >&2
+    exit 1
+  fi
+  model="$(_bundled_ubj_path)" || {
+    echo "[ERROR]: bundled enzyme_xgb_model.ubj not found in pipx venv (${PIPX_HOME}/venvs/sxlaep); cannot run CLI smoke test" >&2
+    exit 1
+  }
+  echo "[INFO]: bundled model: ${model}"
+  suf="${RANDOM}.${$}"
+  out_enz="${PWD}/.sxlaep_install_smoke_enzyme.${suf}.csv"
+  out_nez="${PWD}/.sxlaep_install_smoke_noez.${suf}.csv"
+  rm -f "${out_enz}" "${out_nez}"
+  echo "[INFO]: post-install CLI smoke: sxlaep predict on enzyme_example.fasta and noenzyme_example.fasta"
+  info_stream sxlaep predict --model "${model}" --fasta "${enz}" --output "${out_enz}"
+  info_stream sxlaep predict --model "${model}" --fasta "${nez}" --output "${out_nez}"
+  for f in "${out_enz}" "${out_nez}"; do
+    grep -q pred_label "${f}" || {
+      echo "[ERROR]: smoke output missing column pred_label: ${f}" >&2
+      exit 1
+    }
+    n="$(wc -l < "${f}" | tr -d ' ')"
+    if [[ "${n}" -lt 2 ]]; then
+      echo "[ERROR]: smoke output expected header plus >=1 row in ${f} (lines=${n})" >&2
+      exit 1
+    fi
+    echo "[INFO]: smoke CSV OK: ${f} (${n} lines, includes pred_label)"
+  done
+  rm -f "${out_enz}" "${out_nez}"
+  echo "[INFO]: CLI smoke test PASSED — sxlaep predict succeeded on both example FASTAs (CSV validated)."
 }
 
 _fetch_one_curl() {
@@ -188,6 +236,12 @@ command -v sxlaep >/dev/null 2>&1 || {
 SXLAEP_ABS="$(command -v sxlaep)"
 BIN_DIR="$(dirname "${SXLAEP_ABS}")"
 echo "[INFO]: sxlaep → ${SXLAEP_ABS}"
+
+if [[ "${SXLAEP_SKIP_CLI_SMOKE:-}" == "1" ]]; then
+  echo "[INFO]: skipping CLI smoke test (SXLAEP_SKIP_CLI_SMOKE=1)"
+else
+  run_cli_post_install_smoke
+fi
 
 if PATH="${ORIG_PATH}" command -v sxlaep >/dev/null 2>&1; then
   echo "[INFO]: sxlaep is already on your default PATH (no shell config change needed)."

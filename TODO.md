@@ -28,7 +28,7 @@ The following was implemented and should appear in the next commit to `main`:
 ### End-user install (`tests/install.sh`)
 
 - Script lives under **`tests/`**; it **`cd`s** to its directory so the working root is always **`tests/`**.
-- **`pipx`**: **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI only** (no git/VCS install path; avoids flaky `pip` builds from GitHub).
+- **`pipx`**: **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI only**; post-install **`sxlaep predict`** smoke on example FASTAs (unless **`SXLAEP_SKIP_CLI_SMOKE=1`**).
 - Exports **`PIP_DEFAULT_TIMEOUT`**; default pip args include **`--default-timeout=120`**.
 - **Sample FASTAs**: **`enzyme_example.fasta`** and **`noenzyme_example.fasta`** under **`tests/`**. If missing locally, downloaded from **`SXLAEP_RAW_BASE`** (default `raw.githubusercontent.com/.../<SXLAEP_RAW_REF>/tests`, ref default **`main`**).
 - **Network robustness**: curl **`--connect-timeout`**, **`--max-time`**, **`--retry`**, plus outer loop (**`SXLAEP_FETCH_RETRIES`**); wget **`--timeout`** / **`--tries`**. Optional: **`SXLAEP_CURL_CONNECT_TIMEOUT`**, **`SXLAEP_CURL_MAX_TIME`**, **`SXLAEP_WGET_TIMEOUT`**.

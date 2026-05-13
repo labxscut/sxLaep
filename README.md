@@ -190,7 +190,7 @@ sxlaep predict --help
 From a **clone**, optional end-user helper:
 
 - Example FASTAs: **`tests/enzyme_example.fasta`**, **`tests/noenzyme_example.fasta`**.
-- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI** only. **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** or branch with **`SXLAEP_RAW_REF`** (default **`main`**; path must end at the `tests/` segment on raw.githubusercontent.com).
+- Run **`cd tests && ./install.sh`**: the script **anchors to `tests/`**, **downloads** missing FASTAs from **GitHub raw** when needed, then **`pipx install`** or **`pipx upgrade`** **`sxlaep`** from **PyPI** only, then runs **`sxlaep predict`** on both example FASTAs and **validates CSV output** (set **`SXLAEP_SKIP_CLI_SMOKE=1`** to skip that check). **No sudo.** Override the raw URL prefix with **`SXLAEP_RAW_BASE`** or branch with **`SXLAEP_RAW_REF`** (default **`main`**; path must end at the `tests/` segment on raw.githubusercontent.com).
 - **Developers:** from repo root, run **`pytest tests/`**.
 
 ## REFERENCE PARAMETERS
