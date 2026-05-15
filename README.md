@@ -27,7 +27,7 @@ sxLaep supports both single-sequence prediction and batch processing of FASTA fi
 ## METHODS
 
 
-![pipeline](https://raw.githubusercontent.com/CirinMok/Picture_Raep/main/pipeline.png)
+![pipeline](https://raw.githubusercontent.com/CirinMok/Picture_Raep/main/pipeline_new.jpg)
 
 Figure 1. The sxLaep pre-screening workflow. The framework acts as a lightweight ”gatekeeper” for massive protein datasets. It extracts alignment-free
 physicochemical features and utilizes a machine learning classifier to rapidly filter out non-enzymatic sequences. This process significantly reduces
@@ -73,7 +73,13 @@ Requires **Python 3.9+**. Dependencies (`numpy`, `pandas`, `scikit-learn`, `xgbo
 
 [`pipx`](https://pypa.github.io/pipx/) installs the app into its own isolated environment and links the `sxlaep` executable onto your PATH—**you do not need to create or activate a virtualenv** for normal command-line use.
 
-Install `pipx` once (if needed), then:
+Install `pipx` once (if needed), and add it into PATH:
+
+```bash
+pipx ensurepath
+```
+
+Then:
 
 ```bash
 pipx install sxlaep --pip-args="--prefer-binary -v"
