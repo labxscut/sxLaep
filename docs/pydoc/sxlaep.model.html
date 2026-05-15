@@ -1,52 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: module sxlaep.model</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head><body bgcolor="#f0f0f8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module sxlaep.model</title>
+</head><body>
 
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
-<tr bgcolor="#7799ee">
-<td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="sxlaep.html"><font color="#ffffff">sxlaep</font></a>.model</strong></big></big></font></td
-><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Czweie%5Cdesktop%5Ctodo%5Csxlaep-main%5Csxlaep%5Cmodel.py">c:\users\zweie\desktop\todo\sxlaep-main\sxlaep\model.py</a></font></td></tr></table>
-    <p><tt>Model&nbsp;construction,&nbsp;persistence,&nbsp;and&nbsp;prediction&nbsp;utilities.</tt></p>
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="sxlaep.html" class="white">sxlaep</a>.model</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:/home/runner/work/sxLaep/sxLaep/sxlaep/model.py">/home/runner/work/sxLaep/sxLaep/sxlaep/model.py</a></td></tr></table>
+    <p><span class="code">Model&nbsp;construction,&nbsp;persistence,&nbsp;and&nbsp;prediction&nbsp;utilities.</span></p>
 <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#aa55cc">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
-</td><td width="25%" valign=top><a href="pandas.html">pandas</a><br>
-</td><td width="25%" valign=top><a href="warnings.html">warnings</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="numpy.html">numpy</a><br>
+</td><td class="multicolumn"><a href="pandas.html">pandas</a><br>
+</td><td class="multicolumn"><a href="warnings.html">warnings</a><br>
+</td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor functions-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Functions</strong></td></tr>
     
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-build_xgb_classifier"><strong>build_xgb_classifier</strong></a>(scale_pos_weight: 'float | None' = None, params: 'Mapping[str, Any] | None' = None)</dt><dd><tt>Build&nbsp;an&nbsp;XGBoost&nbsp;binary&nbsp;classifier&nbsp;for&nbsp;enzyme&nbsp;prediction.</tt></dd></dl>
- <dl><dt><a name="-load_model"><strong>load_model</strong></a>(model_path: 'str | Path') -&gt; 'Any'</dt><dd><tt>Load&nbsp;an&nbsp;XGBoost&nbsp;classifier&nbsp;from&nbsp;native&nbsp;JSON/UBJSON&nbsp;or&nbsp;legacy&nbsp;joblib&nbsp;pickle.</tt></dd></dl>
- <dl><dt><a name="-predict_fasta"><strong>predict_fasta</strong></a>(model_path: 'str | Path', fasta_path: 'str | Path', output_csv: 'str | Path', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><tt>Load&nbsp;a&nbsp;model,&nbsp;predict&nbsp;a&nbsp;FASTA&nbsp;file,&nbsp;and&nbsp;write&nbsp;predictions&nbsp;to&nbsp;CSV.</tt></dd></dl>
- <dl><dt><a name="-predict_sequences"><strong>predict_sequences</strong></a>(model: 'Any', sequences: 'Sequence[str]', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><tt>Predict&nbsp;enzyme&nbsp;probabilities&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;protein&nbsp;sequences.</tt></dd></dl>
- <dl><dt><a name="-save_model"><strong>save_model</strong></a>(model: 'Any', model_path: 'str | Path') -&gt; 'None'</dt><dd><tt>Persist&nbsp;a&nbsp;trained&nbsp;XGBoost&nbsp;classifier.<br>
+<tr><td class="decor functions-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt><a name="-build_xgb_classifier"><strong>build_xgb_classifier</strong></a>(scale_pos_weight: 'float | None' = None, params: 'Mapping[str, Any] | None' = None)</dt><dd><span class="code">Build&nbsp;an&nbsp;XGBoost&nbsp;binary&nbsp;classifier&nbsp;for&nbsp;enzyme&nbsp;prediction.</span></dd></dl>
+ <dl><dt><a name="-load_model"><strong>load_model</strong></a>(model_path: 'str | Path') -&gt; 'Any'</dt><dd><span class="code">Load&nbsp;an&nbsp;XGBoost&nbsp;classifier&nbsp;from&nbsp;native&nbsp;JSON/UBJSON&nbsp;or&nbsp;legacy&nbsp;joblib&nbsp;pickle.</span></dd></dl>
+ <dl><dt><a name="-predict_fasta"><strong>predict_fasta</strong></a>(model_path: 'str | Path', fasta_path: 'str | Path', output_csv: 'str | Path', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Load&nbsp;a&nbsp;model,&nbsp;predict&nbsp;a&nbsp;FASTA&nbsp;file,&nbsp;and&nbsp;write&nbsp;predictions&nbsp;to&nbsp;CSV.</span></dd></dl>
+ <dl><dt><a name="-predict_sequences"><strong>predict_sequences</strong></a>(model: 'Any', sequences: 'Sequence[str]', config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1) -&gt; 'pd.DataFrame'</dt><dd><span class="code">Predict&nbsp;enzyme&nbsp;probabilities&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;protein&nbsp;sequences.</span></dd></dl>
+ <dl><dt><a name="-save_model"><strong>save_model</strong></a>(model: 'Any', model_path: 'str | Path') -&gt; 'None'</dt><dd><span class="code">Persist&nbsp;a&nbsp;trained&nbsp;XGBoost&nbsp;classifier.<br>
 &nbsp;<br>
 Paths&nbsp;ending&nbsp;in&nbsp;``.json``&nbsp;or&nbsp;``.ubj``&nbsp;use&nbsp;XGBoost's&nbsp;native&nbsp;format<br>
 (``Booster.save_model``),&nbsp;which&nbsp;loads&nbsp;without&nbsp;version-skew&nbsp;pickle&nbsp;warnings.<br>
 For&nbsp;``.pkl``&nbsp;/&nbsp;``.joblib``,&nbsp;the&nbsp;sklearn&nbsp;wrapper&nbsp;is&nbsp;saved&nbsp;with&nbsp;joblib&nbsp;and&nbsp;a<br>
-sibling&nbsp;``.ubj``&nbsp;is&nbsp;written&nbsp;when&nbsp;``save_model``&nbsp;is&nbsp;available.</tt></dd></dl>
+sibling&nbsp;``.ubj``&nbsp;is&nbsp;written&nbsp;when&nbsp;``save_model``&nbsp;is&nbsp;available.</span></dd></dl>
 </td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#55aa55">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>Any</strong> = typing.Any<br>
-<strong>DEFAULT_XGB_PARAMS</strong> = {'colsample_bytree': 0.7865743071602549, 'eval_metric': 'logloss', 'gamma': 0.6350739428156533, 'learning_rate': 0.11107207866102274, 'max_depth': 9, 'min_child_weight': 3, 'n_estimators': 799, 'n_jobs': -1, 'random_state': 42, 'subsample': 0.8205356041339127}<br>
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>DEFAULT_XGB_PARAMS</strong> = {'colsample_bytree': 0.7865743071602549, 'eval_metric': 'logloss', 'gamma': 0.6350739428156533, 'learning_rate': 0.11107207866102274, 'max_depth': 9, 'min_child_weight': 3, 'n_estimators': 799, 'n_jobs': -1, 'random_state': 42, 'subsample': 0.8205356041339127}<br>
 <strong>Mapping</strong> = typing.Mapping<br>
-<strong>Sequence</strong> = typing.Sequence<br>
-<strong>annotations</strong> = _Feature((3, 7, 0, 'beta', 1), (3, 10, 0, 'alpha', 0), 16777216)</td></tr></table>
+<strong>Sequence</strong> = typing.Sequence</td></tr></table>
 </body></html>
