@@ -7,7 +7,7 @@ sxLaep is an efficient machine learning tool for predicting whether a protein se
 
 [API Reference](https://labxscut.github.io/sxLaep/)
 
-[Workflow Documentation](docs/WORKFLOW.md)
+[cmdline workflow example](https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md)
 
 ## INTRODUCTION
 
@@ -251,6 +251,11 @@ From a **clone**, optional end-user helper:
 |----------|----------|-------------|
 | `--input`, `-i` | Yes | Input FASTA path (uses packaged **`enzyme_xgb_model.ubj`**). Do not combine with **`train`** or **`predict`**. |
 | `--output`, `-o` | No | Output CSV path (default **`sxlaep_predictions.csv`** in the current working directory). |
+| `--lag` | No | Pseudo-AAC lag — **fixed to `10`** for bundled model; use `sxlaep predict` to customize. |
+| `--weight` | No | Pseudo-AAC weight — **fixed to `0.05`** for bundled model; use `sxlaep predict` to customize. |
+| `--segments` | No | Window-AAC segments — **fixed to `3`** for bundled model; use `sxlaep predict` to customize. |
+| `--add-length` / `--no-add-length` | No | Append sequence length — **fixed** for bundled model; use `sxlaep predict` to customize. |
+| `--properties` | No | Physicochemical properties — **fixed to `hydro polar charge`** for bundled model; use `sxlaep predict` to customize. |
 
 #### `sxlaep train`
 
@@ -259,8 +264,14 @@ From a **clone**, optional end-user helper:
 | `--noenzyme-fasta` | Yes | FASTA path for non-enzyme (negative) sequences. |
 | `--enzyme-fasta` | Yes | FASTA path for enzyme (positive) sequences. |
 | `--outdir` | No | Training output directory (default `results/sxlaep_training`). |
-| `--lag`, `--weight`, `--segments` | No | Feature knobs (pseudo-AAC lag/weight, window-AAC segments). |
-| `--test-size`, `--seed`, `--n-jobs` | No | Holdout fraction, RNG seed, parallelism. |
+| `--lag` | No | Pseudo-AAC max correlation lag (default `10`). |
+| `--weight` | No | Pseudo-AAC sequence-order weight (default `0.05`). |
+| `--segments` | No | Number of window-AAC N-to-C segments (default `3`). |
+| `--add-length` / `--no-add-length` | No | Append raw sequence length to feature vector (default: enabled). |
+| `--properties` | No | Physicochemical properties for pseudo-AAC: one or more of `hydro`, `polar`, `charge` (default: all three). |
+| `--test-size` | No | Held-out test fraction (default `0.1`). |
+| `--seed` | No | Random seed for reproducibility (default `42`). |
+| `--n-jobs` | No | Parallel workers for feature extraction (default `-1` = all cores). |
 
 #### `sxlaep predict`
 
@@ -269,6 +280,11 @@ From a **clone**, optional end-user helper:
 | `--model` | Yes | Trained model path (`.pkl` / `.joblib` / native `.ubj` as supported by `load_model`). |
 | `--fasta` | Yes | Input FASTA path. |
 | `--output` | No | Output CSV path (default `results/predictions.csv`). |
+| `--lag` | No | Pseudo-AAC max correlation lag — must match training (default `10`). |
+| `--weight` | No | Pseudo-AAC sequence-order weight — must match training (default `0.05`). |
+| `--segments` | No | Number of window-AAC segments — must match training (default `3`). |
+| `--add-length` / `--no-add-length` | No | Append sequence length — must match training (default: enabled). |
+| `--properties` | No | Physicochemical properties — must match training; one or more of `hydro`, `polar`, `charge` (default: all three). |
 | `--n-jobs` | No | Parallel workers for feature extraction (default `1`). |
 
 ### Output file formats

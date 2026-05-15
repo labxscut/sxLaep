@@ -73,7 +73,7 @@ def write_index() -> None:
   <h2>Modules</h2>
   {cards}
   <h2>Workflow</h2>
-  <p>See <a href="WORKFLOW.md">WORKFLOW.md</a> and <a href="API_REFERENCE.md">API_REFERENCE.md</a>.</p>
+  <p>See <a href="https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md">cmdline workflow example</a> and <a href="https://github.com/labxscut/sxLaep/blob/main/docs/API_REFERENCE.md">API_REFERENCE.md</a>.</p>
 </body>
 </html>
 """,
@@ -103,40 +103,66 @@ def write_workflow() -> None:
     """Write a concise workflow document."""
 
     (DOCS_DIR / "WORKFLOW.md").write_text(
-        """# sxLaep Workflow
+        """# Command-Line Workflow Examples
 
-```text
-Input FASTA files
-    ↓
-Read sequences and assign labels
-    ↓
-Extract multi-property pseudo-AAC, sequence length, CTD, and windowed AAC features
-    ↓
-Split train/test data
-    ↓
-Train XGBoost enzyme/non-enzyme classifier
-    ↓
-Evaluate accuracy, classification report, and confusion matrix
-    ↓
-Save model, predictions, report, and feature names
-```
+## Overview
 
-## Training example
+`sxlaep` provides a full command-line pipeline for enzyme/non-enzyme prediction. All feature extraction parameters are exposed on the CLI.
+
+## Quick prediction (bundled model)
 
 ```bash
-python scripts/main.py train \
-  --noenzyme-fasta data/noenzyme.fasta \
-  --enzyme-fasta data/enzyme.fasta \
-  --outdir results/raep_training
+sxlaep --input proteins.fasta --output predictions.csv
 ```
 
-## Prediction example
+## Training a custom model
 
 ```bash
-python scripts/main.py predict \
-  --model results/raep_training/enzyme_xgb_model.ubj \
-  --fasta data/query.fasta \
-  --output results/query_predictions.csv
+sxlaep train \\
+    --enzyme-fasta enzyme.fasta \\
+    --noenzyme-fasta noenzyme.fasta \\
+    --outdir results/sxlaep_training \\
+    --lag 10 \\
+    --weight 0.05 \\
+    --segments 3 \\
+    --add-length \\
+    --properties hydro polar charge \\
+    --test-size 0.1 \\
+    --seed 42 \\
+    --n-jobs -1
+```
+
+### Feature parameter reference
+
+| Flag | Type | Default | Description |
+|------|------|---------|-------------|
+| `--lag` | int | `10` | Maximum correlation lag for pseudo-AAC |
+| `--weight` | float | `0.05` | Weight on sequence-order correlation terms |
+| `--segments` | int | `3` | Number of N-to-C windows for windowed AAC |
+| `--add-length` / `--no-add-length` | flag | enabled | Append raw sequence length to feature vector |
+| `--properties` | list | `hydro polar charge` | Physicochemical properties for pseudo-AAC |
+
+## Prediction with a trained model
+
+```bash
+sxlaep predict \\
+    --model results/sxlaep_training/enzyme_xgb_model.ubj \\
+    --fasta query.fasta \\
+    --output results/query_predictions.csv \\
+    --lag 10 \\
+    --weight 0.05 \\
+    --segments 3 \\
+    --add-length \\
+    --properties hydro polar charge \\
+    --n-jobs 1
+```
+
+**Important:** The feature parameters must match those used during training.
+
+## Verifying installation
+
+```bash
+pytest tests/
 ```
 """,
         encoding="utf-8",

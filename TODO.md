@@ -6,13 +6,13 @@
 
 - **Location**: `Feature Extraction Parameters` under `REFERENCE PARAMETERS` in `README.md`
 - **Requirement**: Expose window size, amino acid property selection, and related knobs on the CLI without editing source.
-- **Status**: **Not done** — still pending implementation in `sxlaep/cli.py` (and wiring into predict/train paths).
+- **Status**: **Done** — implemented in `sxlaep/cli.py` v1.0.3 with `--lag`, `--weight`, `--segments`, `--add-length`/`--no-add-length`, `--properties` exposed on both `train` and `predict` subcommands.
 
 ### 2. Quick links adjustment and performance fix
 
 - **Issue**: `Workflow Documentation` under `QUICK LINKS` is slow to open.
 - **Requirements**: Fix slow loading; rename link to **`cmdline workflow example`**; align `docs/WORKFLOW.md` with that focus.
-- **Status**: **Not done** — README still says “Workflow Documentation”; no perf work on that link yet.
+- **Status**: **Done** — README link renamed to `cmdline workflow example`; `docs/WORKFLOW.md` rewritten with full CLI workflow examples; regenerated via `scripts/generate_pydoc.py`.
 
 ### 3. Installation and self-test enhancement
 
@@ -50,6 +50,6 @@ The following was implemented and should appear in the next commit to `main`:
 
 ## Checklist (quick view)
 
-- [ ] **§1** — CLI flags for all feature-extraction parameters documented in README and implemented in code.
-- [ ] **§2** — Quick link rename + `WORKFLOW.md` refresh + slow-load fix.
+- [x] **§1** — CLI flags for all feature-extraction parameters documented in README and implemented in code.
+- [x] **§2** — Quick link rename + `WORKFLOW.md` refresh + slow-load fix.
 - [x] **§3** — pipx-first install docs; post-install verification via **`pytest tests/`** and **`tests/install.sh`**; bundled **`.ubj`** test path fixed for pipx layouts.

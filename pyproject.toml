@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sxlaep"
-version = "1.0.0"
+version = "1.0.4"
 description = "sxLaep: Rapid Enzyme/Non-Enzyme Prediction using sequence features and XGBoost"
 readme = "README.md"
 requires-python = ">=3.9"
+license = {text = "MIT"}
 authors = [{name = "labxscut"}]
 dependencies = [
     "numpy>=1.23",
@@ -19,6 +20,9 @@ dependencies = [
 
 [project.scripts]
 sxlaep = "sxlaep.cli:main"
+
+[tool.setuptools]
+license-files = []
 
 [tool.setuptools.packages.find]
 include = ["sxlaep*"]
