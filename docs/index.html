@@ -2,27 +2,848 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>sxLaep API Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="build-timestamp" content="2026-05-16T12:00:00Z">
+  <title>sxLaep — Rapid Enzyme/Non-Enzyme Prediction</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; max-width: 980px; margin: 40px auto; line-height: 1.55; color: #222; }
-    h1 { border-bottom: 2px solid #222; padding-bottom: 10px; }
-    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
-    a { color: #0b57d0; text-decoration: none; font-weight: 700; }
-    code { background: #f6f8fa; padding: 2px 5px; border-radius: 4px; }
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --blue: #2b6cb0;
+      --blue-light: #4299e1;
+      --blue-pale: #ebf4ff;
+      --blue-dim: rgba(43, 108, 176, .08);
+      --blue-border: rgba(43, 108, 176, .15);
+      --accent: var(--blue);
+      --accent-light: var(--blue-light);
+      --accent-dim: var(--blue-dim);
+      --bg: #ffffff;
+      --bg-secondary: #f7fafc;
+      --bg-code: #f5f7fa;
+      --text: #1a202c;
+      --text-secondary: #4a5568;
+      --text-muted: #a0aec0;
+      --border: #e2e8f0;
+      --max-width: 960px;
+      --radius: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      animation: fadeSlideUp .6s ease-out forwards;
+    }
+    .reveal:nth-child(1) { animation-delay: .05s; }
+    .reveal:nth-child(2) { animation-delay: .12s; }
+    .reveal:nth-child(3) { animation-delay: .2s; }
+    .reveal:nth-child(4) { animation-delay: .28s; }
+    .reveal:nth-child(5) { animation-delay: .36s; }
+    .reveal:nth-child(6) { animation-delay: .44s; }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255, 255, 255, .88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: flex; align-items: center; gap: 24px;
+      padding: 0 24px; height: 56px;
+    }
+    nav .logo {
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--accent); letter-spacing: -.01em;
+    }
+    nav a.nav-link {
+      color: var(--text-secondary); text-decoration: none;
+      font-size: .85rem; font-weight: 500;
+      transition: color .2s;
+    }
+    nav a.nav-link:hover { color: var(--accent); }
+    nav .spacer { flex: 1; }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 120px 24px 64px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--blue-pale) 0%, var(--bg) 100%);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 14px; border-radius: 100px;
+      background: var(--accent-dim);
+      font-size: .75rem; font-weight: 500;
+      color: var(--accent); margin-bottom: 24px;
+      border: 1px solid var(--blue-border);
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800; line-height: 1.15;
+      color: var(--text); margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.05rem; color: var(--text-secondary);
+      max-width: 640px; margin: 0 auto 28px;
+    }
+    .hero-badges {
+      display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .hero-badges img { height: 20px; border-radius: 3px; }
+    .hero-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 24px; border-radius: 6px;
+      font-size: .88rem; font-weight: 600; text-decoration: none;
+      transition: all .2s; border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+    .btn-primary:hover {
+      background: #1a4f8a; border-color: #1a4f8a;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: var(--bg); color: var(--text-secondary);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent); color: var(--accent);
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 64px 24px;
+    }
+    section:not(:last-of-type) { border-bottom: 1px solid var(--border); }
+
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-header h2 {
+      font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .section-header h2 span { color: var(--accent); }
+    .section-header p { color: var(--text-secondary); font-size: .95rem; }
+    .section-divider {
+      width: 48px; height: 3px;
+      background: var(--accent); border-radius: 3px;
+      margin: 12px auto 0; opacity: .5;
+    }
+
+    /* ===== OVERVIEW LIST ===== */
+    .overview-list {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .overview-list li {
+      padding: 10px 0 10px 20px;
+      border-left: 2px solid var(--blue-border);
+      margin-bottom: 8px;
+      font-size: .92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      transition: border-color .2s;
+    }
+    .overview-list li:hover {
+      border-left-color: var(--accent);
+    }
+    .overview-list li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ===== PIPELINE ===== */
+    .pipeline-flow {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 4px; margin: 28px 0;
+    }
+    .pipeline-flow .step {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 18px;
+      font-size: .82rem; font-weight: 500; text-align: center;
+      color: var(--text-secondary);
+      transition: all .2s;
+    }
+    .pipeline-flow .step:hover {
+      border-color: var(--blue-border);
+      color: var(--text);
+    }
+    .pipeline-flow .arrow {
+      color: var(--accent); font-size: 1.1rem; opacity: .5;
+    }
+
+    /* ===== CODE ===== */
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    pre code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: .78rem; line-height: 1.65;
+      color: var(--text);
+      background: transparent; padding: 0;
+    }
+    code:not(pre code) {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82em;
+      background: var(--accent-dim);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid var(--blue-border);
+    }
+
+    /* ===== TABLE ===== */
+    table {
+      width: 100%; border-collapse: collapse;
+      margin: 16px 0; font-size: .85rem;
+    }
+    th, td {
+      padding: 10px 14px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-weight: 600; font-size: .78rem; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--accent);
+      background: var(--bg-secondary);
+    }
+    td { color: var(--text-secondary); }
+    tr:last-child td { border-bottom: none; }
+
+    /* ===== API MODULES ===== */
+    .api-module {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 16px 0;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .api-module[open] { border-color: var(--blue-border); }
+    .api-module summary {
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600; font-size: .93rem;
+      display: flex; align-items: center; gap: 8px;
+      user-select: none; transition: background .15s;
+      list-style: none;
+    }
+    .api-module summary::-webkit-details-marker { display: none; }
+    .api-module summary::before {
+      content: '+';
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: .75rem; font-weight: 600;
+      color: var(--accent);
+      transition: all .15s;
+    }
+    .api-module[open] summary::before {
+      content: '−';
+      background: var(--accent-dim);
+      border-color: var(--blue-border);
+    }
+    .api-module summary:hover { background: rgba(43, 108, 176, .03); }
+    .api-module .body {
+      padding: 0 18px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .api-module .body > p:first-child {
+      padding-top: 14px; color: var(--text-secondary); font-size: .88rem;
+    }
+
+    .func {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin: 12px 0;
+      padding: 14px;
+      background: var(--bg);
+      transition: border-color .2s;
+    }
+    .func:hover { border-color: var(--blue-border); }
+    .func .sig {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+    .func .desc { font-size: .85rem; color: var(--text-secondary); }
+
+    h3 {
+      font-size: 1.1rem; font-weight: 700; margin: 28px 0 10px;
+    }
+    h4 { font-weight: 600; margin: 22px 0 8px; font-size: .92rem; color: var(--text-secondary); }
+
+    /* ===== CITATION ===== */
+    blockquote {
+      margin: 14px 0; padding: 14px 18px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-dim);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: .85rem; color: var(--text-secondary);
+    }
+
+    ul, ol { margin-left: 18px; color: var(--text-secondary); font-size: .875rem; }
+    li { margin-bottom: 4px; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center; padding: 40px 24px;
+      color: var(--text-muted); font-size: .82rem;
+    }
+    footer a {
+      color: var(--accent); text-decoration: none;
+      transition: color .15s;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero { padding: 100px 20px 48px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav a.nav-link:not(.github-link) { display: none; }
+      .hero h1 { font-size: 1.8rem; }
+      section { padding: 40px 16px; }
+    }
   </style>
 </head>
 <body>
-  <h1>sxLaep API Documentation</h1>
-  <p>Generated with Python PyDoc. The documentation covers FASTA parsing, sequence feature extraction, model training, prediction, and command-line workflows.</p>
-  <h2>Modules</h2>
-  <div class="card"><a href="pydoc/sxlaep.config.html"><code>sxlaep.config</code></a><p>module sxlaep.config</p></div>
-<div class="card"><a href="pydoc/sxlaep.fasta.html"><code>sxlaep.fasta</code></a><p>module sxlaep.fasta</p></div>
-<div class="card"><a href="pydoc/sxlaep.features.html"><code>sxlaep.features</code></a><p>module sxlaep.features</p></div>
-<div class="card"><a href="pydoc/sxlaep.model.html"><code>sxlaep.model</code></a><p>module sxlaep.model</p></div>
-<div class="card"><a href="pydoc/sxlaep.training.html"><code>sxlaep.training</code></a><p>module sxlaep.training</p></div>
-<div class="card"><a href="pydoc/sxlaep.pipeline.html"><code>sxlaep.pipeline</code></a><p>module sxlaep.pipeline</p></div>
-<div class="card"><a href="pydoc/sxlaep.cli.html"><code>sxlaep.cli</code></a><p>module sxlaep.cli</p></div>
-  <h2>Workflow</h2>
-  <p>See <a href="https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md">cmdline workflow example</a> and <a href="https://github.com/labxscut/sxLaep/blob/main/docs/API_REFERENCE.md">API_REFERENCE.md</a>.</p>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <span class="logo">sxLaep</span>
+    <a class="nav-link" href="#overview">Overview</a>
+    <a class="nav-link" href="#install">Install</a>
+    <a class="nav-link" href="#quickstart">Quick Start</a>
+    <a class="nav-link" href="#api">API</a>
+    <a class="nav-link" href="#workflow">Workflow</a>
+    <a class="nav-link" href="#ref">Reference</a>
+    <span class="spacer"></span>
+    <a class="nav-link github-link" href="https://github.com/labxscut/sxLaep" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-tag">
+    v1.0.4 &middot; Enzyme Prediction
+  </div>
+  <h1><span>sxLaep</span></h1>
+  <p>Rapid Enzyme / Non-Enzyme Prediction &mdash; an efficient machine learning tool combining multi-physicochemical sequence features with an XGBoost classifier for fast and accurate binary classification of protein sequences.</p>
+  <div class="hero-badges">
+    <a href="https://github.com/labxscut/sxLaep"><img src="https://img.shields.io/github/stars/labxscut/sxLaep?style=social" alt="stars" loading="lazy"></a>
+    <a href="https://pypi.org/project/sxlaep/"><img src="https://img.shields.io/pypi/v/sxlaep?color=2b6cb0&labelColor=ebf4ff" alt="PyPI" loading="lazy"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/pypi/l/sxlaep?color=2b6cb0&labelColor=ebf4ff" alt="License" loading="lazy"></a>
+    <a href="https://github.com/labxscut/sxLaep"><img src="https://img.shields.io/github/last-commit/labxscut/sxLaep?color=2b6cb0&labelColor=ebf4ff" alt="last commit" loading="lazy"></a>
+  </div>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="https://github.com/labxscut/sxLaep" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a class="btn btn-secondary" href="#install">Get Started</a>
+    <a class="btn btn-secondary" href="#api">API Reference</a>
+  </div>
+</header>
+
+<!-- Overview -->
+<section id="overview">
+  <div class="section-header reveal">
+    <h2><span>Overview</span></h2>
+    <p>Accurate identification of enzymes from protein sequences is crucial for understanding metabolic pathways, drug target discovery, and functional annotation of novel proteins.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <ul class="overview-list">
+    <li class="reveal">
+      <strong>Fast inference</strong> — pre-trained XGBoost classifier (799 estimators, max depth 9) optimized for rapid enzyme prediction on large-scale protein datasets
+    </li>
+    <li class="reveal">
+      <strong>Rich feature extraction</strong> — combines Pse-AAC, CTD, windowed AAC, and sequence length for comprehensive sequence representation (347 features)
+    </li>
+    <li class="reveal">
+      <strong>Easy to use</strong> — dual Python API and CLI interface; install via pip and start predicting in minutes with the bundled pre-trained model
+    </li>
+    <li class="reveal">
+      <strong>Bioinformatics ready</strong> — built-in FASTA parsing, batch processing, and parallelized feature extraction (joblib) for production workflows
+    </li>
+    <li class="reveal">
+      <strong>Docker support</strong> — pre-configured image with Python 3.11 and all dependencies for isolated execution
+    </li>
+    <li class="reveal">
+      <strong>Built-in evaluation</strong> — classification reports, confusion matrices, and accuracy scoring for model assessment
+    </li>
+  </ul>
+
+  <h3 class="reveal">Pipeline</h3>
+  <div class="pipeline-flow reveal">
+    <span class="step">Input FASTA</span>
+    <span class="arrow">→</span>
+    <span class="step">Feature Extraction</span>
+    <span class="arrow">→</span>
+    <span class="step">XGBoost Classifier</span>
+    <span class="arrow">→</span>
+    <span class="step">Enzyme / Non-Enzyme</span>
+  </div>
+</section>
+
+<!-- Install -->
+<section id="install">
+  <div class="section-header reveal">
+    <h2><span>Installation</span></h2>
+    <p>sxLaep supports Python 3.9+ on Windows, Linux, and macOS.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <h3>Dependencies</h3>
+  <table>
+    <tr><th>Package</th><th>Minimum</th></tr>
+    <tr><td><code>numpy</code></td><td>≥ 1.23</td></tr>
+    <tr><td><code>pandas</code></td><td>≥ 1.5</td></tr>
+    <tr><td><code>scikit-learn</code></td><td>≥ 1.2</td></tr>
+    <tr><td><code>xgboost</code></td><td>≥ 1.7</td></tr>
+    <tr><td><code>joblib</code></td><td>≥ 1.2</td></tr>
+  </table>
+
+  <h3>From PyPI</h3>
+  <pre><code>pip install sxlaep</code></pre>
+
+  <h3>From Source</h3>
+  <pre><code>git clone https://github.com/labxscut/sxLaep
+cd sxLaep
+pip install -e .</code></pre>
+
+  <h3>Docker</h3>
+  <pre><code>docker pull labxscut/sxlaep:python3.11
+docker run --rm -it -v $(pwd):/workspace labxscut/sxlaep:python3.11 bash</code></pre>
+</section>
+
+<!-- Quick Start -->
+<section id="quickstart">
+  <div class="section-header reveal">
+    <h2><span>Quick Start</span></h2>
+    <p>Predict enzyme probability for a single protein sequence or a FASTA file in just a few lines of code using the bundled pre-trained model.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <h3>Command Line (shorthand)</h3>
+  <pre><code>sxlaep --input sequences.fasta --output predictions.csv</code></pre>
+
+  <h3>Python API</h3>
+  <pre><code>from pathlib import Path
+import sxlaep
+from sxlaep.model import load_model, predict_sequences, predict_fasta
+
+# Load the bundled pre-trained model (native UBJSON format)
+model_path = Path(sxlaep.__file__).parent / "enzyme_xgb_model.ubj"
+model = load_model(model_path)
+
+# Single sequence prediction
+df = predict_sequences(model, ["MKVLW..."])
+# df['pred_label']          -> 0 (Non-Enzyme) or 1 (Enzyme)
+# df['enzyme_probability']  -> float (0.0 ~ 1.0)
+
+# FASTA file prediction
+result = predict_fasta(
+    model_path=model_path,
+    fasta_path="sequences.fasta",
+    output_csv="predictions.csv",
+)
+print(result.head())</code></pre>
+
+  <h3>Training Your Own Model</h3>
+  <pre><code>sxlaep train \
+  --noenzyme-fasta data/noenzyme.fasta \
+  --enzyme-fasta data/enzyme.fasta \
+  --outdir results/sxlaep_training</code></pre>
+</section>
+
+<!-- API Reference -->
+<section id="api">
+  <div class="section-header reveal">
+    <h2><span>API Reference</span></h2>
+    <p>Complete API documentation for all sxLaep modules (v1.0.4).</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- config -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">config</span> — Configuration &amp; Constants</summary>
+    <div class="body">
+      <p>Configuration dataclasses and biochemical constants used by sxLaep.</p>
+
+      <div class="func">
+        <div class="sig">FeatureConfig(lag=10, weight=0.05, n_segments=3, add_length=True, properties=PROPERTIES)</div>
+        <div class="desc">Frozen dataclass. Feature extraction configuration.</div>
+        <table>
+          <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+          <tr><td><code>lag</code></td><td><code>10</code></td><td>Maximum correlation lag used by multi-property pseudo-AAC.</td></tr>
+          <tr><td><code>weight</code></td><td><code>0.05</code></td><td>Weight applied to sequence-order correlation terms.</td></tr>
+          <tr><td><code>n_segments</code></td><td><code>3</code></td><td>Number of N-to-C sequence windows used by windowed AAC.</td></tr>
+          <tr><td><code>add_length</code></td><td><code>True</code></td><td>Whether to append raw sequence length to the pseudo-AAC vector.</td></tr>
+          <tr><td><code>properties</code></td><td><code>PROPERTIES</code></td><td>Amino-acid physicochemical property tables used by pseudo-AAC.</td></tr>
+        </table>
+      </div>
+
+      <div class="func">
+        <div class="sig">TrainingConfig(test_size=0.1, random_state=42, n_jobs=-1, model_path='enzyme_xgb_model.ubj', report_path='classification_report.txt', predictions_path='test_predictions.csv')</div>
+        <div class="desc">Frozen dataclass. Training configuration for enzyme/non-enzyme classification.</div>
+        <table>
+          <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+          <tr><td><code>test_size</code></td><td><code>0.1</code></td><td>Fraction of data reserved for testing.</td></tr>
+          <tr><td><code>random_state</code></td><td><code>42</code></td><td>Random seed for reproducibility.</td></tr>
+          <tr><td><code>n_jobs</code></td><td><code>-1</code></td><td>Number of parallel jobs. <code>-1</code> uses all cores.</td></tr>
+          <tr><td><code>model_path</code></td><td><code>'enzyme_xgb_model.ubj'</code></td><td>Filename for the saved model (native XGBoost UBJSON format).</td></tr>
+          <tr><td><code>report_path</code></td><td><code>'classification_report.txt'</code></td><td>Filename for the text classification report.</td></tr>
+          <tr><td><code>predictions_path</code></td><td><code>'test_predictions.csv'</code></td><td>Filename for test-set prediction CSV.</td></tr>
+        </table>
+      </div>
+
+      <h4>DEFAULT_XGB_PARAMS</h4>
+      <p style="font-size:.85rem;color:var(--text-secondary);">Default hyperparameters for the XGBoost classifier (799 estimators, max depth 9, tuned learning rate 0.111).</p>
+
+      <h4>Constants</h4>
+      <table>
+        <tr><th>Name</th><th>Description</th></tr>
+        <tr><td><code>AA20</code></td><td>20 standard amino acid alphabet (<code>ACDEFGHIKLMNPQRSTVWY</code>).</td></tr>
+        <tr><td><code>HYDRO</code></td><td>Hydrophobicity values for each amino acid.</td></tr>
+        <tr><td><code>POLAR</code></td><td>Polarity values for each amino acid.</td></tr>
+        <tr><td><code>CHARGE</code></td><td>Charge values for each amino acid.</td></tr>
+        <tr><td><code>PROPERTIES</code></td><td>Combined dictionary of <code>hydro</code>, <code>polar</code>, and <code>charge</code>.</td></tr>
+        <tr><td><code>CTD_GROUPS</code></td><td>Physicochemical group definitions for CTD features (7 systems: hydrophobicity, normalized VDW, polarizability, secondary structure, solvent access, polarity, charge).</td></tr>
+        <tr><td><code>DEFAULT_XGB_PARAMS</code></td><td>Default hyperparameters for the XGBoost classifier.</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <!-- fasta -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">fasta</span> — FASTA Parsing</summary>
+    <div class="body">
+      <p>FASTA reading and writing utilities for protein sequence experiments.</p>
+
+      <div class="func">
+        <div class="sig">FastaRecord(identifier: str, description: str, sequence: str)</div>
+        <div class="desc">Frozen dataclass. A single FASTA record with identifier, full description (header without <code>&gt;</code>), and concatenated protein sequence.</div>
+      </div>
+      <div class="func">
+        <div class="sig">read_fasta(fasta_path: str | Path) → list[str]</div>
+        <div class="desc">Read a FASTA file and return only sequence strings (discards headers).</div>
+      </div>
+      <div class="func">
+        <div class="sig">read_fasta_records(fasta_path: str | Path) → list[FastaRecord]</div>
+        <div class="desc">Read a FASTA file and return full records with identifiers, descriptions, and sequences.</div>
+      </div>
+      <div class="func">
+        <div class="sig">write_fasta_records(records: Iterable[FastaRecord], output_path: str | Path) → None</div>
+        <div class="desc">Write FASTA records to disk with 80-char line wrapping. Creates parent directories as needed.</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- features -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">features</span> — Feature Extraction</summary>
+    <div class="body">
+      <p>Protein sequence feature extraction for sxLaep. Combines pseudo-AAC, CTD, and windowed AAC into a 347-dimensional feature vector.</p>
+
+      <div class="func">
+        <div class="sig">extract_features(sequence: str, config: FeatureConfig | None = None) → np.ndarray</div>
+        <div class="desc">Extract the full sxLaep feature vector for one protein sequence (pseudo-AAC + CTD + windowed AAC).</div>
+      </div>
+      <div class="func">
+        <div class="sig">extract_feature_matrix(sequences: Sequence[str], config=None, n_jobs=1) → np.ndarray</div>
+        <div class="desc">Extract a feature matrix from a sequence collection with optional parallel processing via joblib. Returns <code>(n_sequences, n_features)</code> array.</div>
+      </div>
+      <div class="func">
+        <div class="sig">feature_names(config: FeatureConfig | None = None) → list[str]</div>
+        <div class="desc">Return descriptive names for all extracted sxLaep features.</div>
+      </div>
+      <div class="func">
+        <div class="sig">pse_aac_multi(sequence, lam=10, weight=0.05, properties=PROPERTIES, add_length=True) → np.ndarray</div>
+        <div class="desc">Compute multi-property pseudo-amino acid composition features. Returns vector of length <code>20 + lam × n_properties + int(add_length)</code>.</div>
+      </div>
+      <div class="func">
+        <div class="sig">ctd_features(sequence: str) → np.ndarray</div>
+        <div class="desc">Compute composition-transition-distribution features using 7 physicochemical group systems. Returns 147 features (21 per system: 3 composition + 3 transition + 15 distribution).</div>
+      </div>
+      <div class="func">
+        <div class="sig">window_aac(sequence: str, n_segments=3) → np.ndarray</div>
+        <div class="desc">Compute windowed amino acid composition over N-to-C sequence segments. Returns <code>n_segments × 20</code> features.</div>
+      </div>
+      <div class="func">
+        <div class="sig">sanitize_sequence(sequence: str) → str</div>
+        <div class="desc">Return an uppercase protein sequence containing only the 20 standard amino acids (non-standard characters removed).</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- model -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">model</span> — Model &amp; Prediction</summary>
+    <div class="body">
+      <p>Model construction, persistence, and prediction utilities. Pre-trained models use native XGBoost UBJSON format (<code>.ubj</code>) for cross-version compatibility.</p>
+
+      <div class="func">
+        <div class="sig">build_xgb_classifier(scale_pos_weight=None, params=None) → XGBClassifier</div>
+        <div class="desc">Build an XGBoost binary classifier using <code>DEFAULT_XGB_PARAMS</code>. Optionally override hyperparameters and set positive-class weight.</div>
+      </div>
+      <div class="func">
+        <div class="sig">load_model(model_path: str | Path) → XGBClassifier</div>
+        <div class="desc">Load a model from native XGBoost format (<code>.json</code> / <code>.ubj</code>) or legacy joblib pickle. Prefers the sibling <code>.ubj</code> file when loading <code>.pkl</code> to avoid version-skew warnings.</div>
+      </div>
+      <div class="func">
+        <div class="sig">save_model(model: Any, model_path: str | Path) → None</div>
+        <div class="desc">Persist a trained XGBoost classifier. Paths ending in <code>.json</code> or <code>.ubj</code> use native <code>Booster.save_model</code>. For <code>.pkl</code> / <code>.joblib</code>, saves with joblib and also writes a sibling <code>.ubj</code> file.</div>
+      </div>
+      <div class="func">
+        <div class="sig">predict_sequences(model, sequences, config=None, n_jobs=1) → pd.DataFrame</div>
+        <div class="desc">Predict enzyme probabilities for a list of protein sequences. Returns DataFrame with columns <code>pred_label</code> (0/1) and <code>enzyme_probability</code> (float).</div>
+      </div>
+      <div class="func">
+        <div class="sig">predict_fasta(model_path, fasta_path, output_csv, config=None, n_jobs=1) → pd.DataFrame</div>
+        <div class="desc">Load a model, predict all sequences in a FASTA file, and write results to CSV. Returns DataFrame with columns <code>sequence_id</code>, <code>description</code>, <code>pred_label</code>, <code>enzyme_probability</code>.</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- training -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">training</span> — Training &amp; Evaluation</summary>
+    <div class="body">
+      <p>Training and evaluation routines for sxLaep. Trains from two FASTA files (enzyme / non-enzyme) with stratified train/test split.</p>
+
+      <div class="func">
+        <div class="sig">train_enzyme_classifier(noenzyme_fasta, enzyme_fasta, output_dir='results/sxlaep_training', feature_config=None, training_config=None, xgb_params=None) → dict</div>
+        <div class="desc">Train an enzyme/non-enzyme classifier from two FASTA files. Saves model (native <code>.ubj</code>), classification report, test predictions CSV, and feature names. Returns dict with <code>model</code>, <code>model_path</code>, <code>report_path</code>, <code>predictions_path</code>, <code>feature_names_path</code>, <code>n_sequences</code>, <code>n_features</code>, <code>metrics</code>.</div>
+      </div>
+      <div class="func">
+        <div class="sig">load_labeled_fastas(noenzyme_fasta, enzyme_fasta) → tuple[list[str], np.ndarray]</div>
+        <div class="desc">Load non-enzyme and enzyme FASTA files. Returns sequences list and binary labels array (0 = non-enzyme, 1 = enzyme).</div>
+      </div>
+      <div class="func">
+        <div class="sig">compute_scale_pos_weight(labels: np.ndarray) → float</div>
+        <div class="desc">Compute XGBoost <code>scale_pos_weight</code> from binary labels (negatives / positives ratio).</div>
+      </div>
+      <div class="func">
+        <div class="sig">evaluate_predictions(y_true, y_pred) → dict</div>
+        <div class="desc">Return accuracy, confusion matrix, and classification report (as dict) for binary predictions.</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- pipeline -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">pipeline</span> — End-to-End Workflows</summary>
+    <div class="body">
+      <p>High-level wrappers for the two main sxLaep workflows: training and prediction.</p>
+
+      <div class="func">
+        <div class="sig">run_training_pipeline(noenzyme_fasta, enzyme_fasta, output_dir='results/sxlaep_training', feature_config=None, training_config=None, xgb_params=None) → dict</div>
+        <div class="desc">Run the complete FASTA-to-model training workflow. Thin wrapper around <code>train_enzyme_classifier</code>.</div>
+      </div>
+      <div class="func">
+        <div class="sig">run_prediction_pipeline(model_path, fasta_path, output_csv='results/predictions.csv', feature_config=None, n_jobs=1) → pd.DataFrame</div>
+        <div class="desc">Run the complete FASTA-to-prediction workflow. Thin wrapper around <code>predict_fasta</code>.</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- cli -->
+  <details class="api-module">
+    <summary><span style="color:var(--accent);font-weight:700;">cli</span> — Command-Line Interface</summary>
+    <div class="body">
+      <div class="func">
+        <div class="sig">build_parser() → argparse.ArgumentParser</div>
+        <div class="desc">Build the sxLaep command-line argument parser with <code>train</code> and <code>predict</code> subcommands.</div>
+      </div>
+      <div class="func">
+        <div class="sig">main(argv: list[str] | None = None) → None</div>
+        <div class="desc">Run the sxLaep command-line interface.</div>
+      </div>
+
+      <h4>Shorthand (bundled model)</h4>
+      <pre><code>sxlaep --input query.fasta --output predictions.csv</code></pre>
+      <p style="font-size:.82rem;color:var(--text-muted);">Uses the packaged <code>enzyme_xgb_model.ubj</code>. Feature parameters are fixed to the bundled model's defaults.</p>
+
+      <h4>Train Subcommand</h4>
+      <pre><code>sxlaep train \
+  --noenzyme-fasta data/noenzyme.fasta \
+  --enzyme-fasta data/enzyme.fasta \
+  --outdir results/sxlaep_training \
+  --lag 10 --weight 0.05 --segments 3 \
+  --properties hydro polar charge \
+  --test-size 0.1 --seed 42 --n-jobs -1
+
+# --add-length        append sequence length (default)
+# --no-add-length     exclude sequence length from features</code></pre>
+
+      <h4>Predict Subcommand</h4>
+      <pre><code>sxlaep predict \
+  --model results/sxlaep_training/enzyme_xgb_model.ubj \
+  --fasta data/query.fasta \
+  --output results/query_predictions.csv \
+  --lag 10 --weight 0.05 --segments 3 \
+  --properties hydro polar charge \
+  --n-jobs 4</code></pre>
+    </div>
+  </details>
+</section>
+
+<!-- Workflow -->
+<section id="workflow">
+  <div class="section-header reveal">
+    <h2><span>Workflow</span></h2>
+    <p>End-to-end workflow from raw FASTA files to trained model and predictions.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="pipeline-flow reveal">
+    <span class="step">FASTA Files</span><span class="arrow">→</span>
+    <span class="step">Read &amp; Label</span><span class="arrow">→</span>
+    <span class="step">Feature Extraction</span><span class="arrow">→</span>
+    <span class="step">Train/Test Split</span><span class="arrow">→</span>
+    <span class="step">XGBoost Training</span><span class="arrow">→</span>
+    <span class="step">Evaluate</span><span class="arrow">→</span>
+    <span class="step">Save Model (.ubj)</span>
+  </div>
+
+  <h3>Training Example</h3>
+  <pre><code># CLI
+sxlaep train \
+  --noenzyme-fasta data/noenzyme.fasta \
+  --enzyme-fasta data/enzyme.fasta \
+  --outdir results/sxlaep_training
+
+# Python API
+from sxlaep.training import train_enzyme_classifier
+
+results = train_enzyme_classifier(
+    noenzyme_fasta="data/noenzyme.fasta",
+    enzyme_fasta="data/enzyme.fasta",
+    output_dir="results/sxlaep_training",
+)
+print(results["metrics"]["accuracy"])  # e.g. 0.92
+print(results["model_path"])           # .../enzyme_xgb_model.ubj</code></pre>
+
+  <h3>Prediction Example</h3>
+  <pre><code># CLI (shorthand, bundled model)
+sxlaep --input data/query.fasta --output results/predictions.csv
+
+# CLI (subcommand, custom model)
+sxlaep predict \
+  --model results/sxlaep_training/enzyme_xgb_model.ubj \
+  --fasta data/query.fasta \
+  --output results/query_predictions.csv
+
+# Python API
+from sxlaep.model import predict_fasta
+
+df = predict_fasta(
+    model_path="results/sxlaep_training/enzyme_xgb_model.ubj",
+    fasta_path="data/query.fasta",
+    output_csv="results/query_predictions.csv",
+)
+print(df[["sequence_id", "pred_label", "enzyme_probability"]].head())</code></pre>
+</section>
+
+<!-- Reference -->
+<section id="ref">
+  <div class="section-header reveal">
+    <h2><span>Reference</span></h2>
+    <p>Parameters, output formats, notes, and citations.</p>
+    <div class="section-divider"></div>
+  </div>
+
+  <h3>Feature Extraction Parameters</h3>
+  <table>
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td><code>lag</code></td><td>int</td><td>10</td><td>Maximum correlation lag for pseudo-AAC.</td></tr>
+    <tr><td><code>weight</code></td><td>float</td><td>0.05</td><td>Weight applied to sequence-order correlation terms.</td></tr>
+    <tr><td><code>n_segments</code></td><td>int</td><td>3</td><td>Number of N-to-C sequence windows for windowed AAC.</td></tr>
+    <tr><td><code>add_length</code></td><td>bool</td><td>True</td><td>Append raw sequence length to the feature vector.</td></tr>
+    <tr><td><code>properties</code></td><td>dict</td><td>PROPERTIES</td><td>Physicochemical property tables (hydrophobicity, polarity, charge).</td></tr>
+  </table>
+
+  <h3>Output Format (predict_fasta CSV)</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>sequence_id</code></td><td>str</td><td>FASTA identifier (first whitespace-delimited token of the header).</td></tr>
+    <tr><td><code>description</code></td><td>str</td><td>Full FASTA header without the leading <code>&gt;</code>.</td></tr>
+    <tr><td><code>pred_label</code></td><td>int</td><td>Predicted class: 0 = Non-Enzyme, 1 = Enzyme.</td></tr>
+    <tr><td><code>enzyme_probability</code></td><td>float</td><td>Enzyme probability score (0.0 ~ 1.0).</td></tr>
+  </table>
+
+  <h3>Training Output Files</h3>
+  <table>
+    <tr><th>File</th><th>Description</th></tr>
+    <tr><td><code>enzyme_xgb_model.ubj</code></td><td>Trained model in native XGBoost UBJSON format.</td></tr>
+    <tr><td><code>classification_report.txt</code></td><td>Accuracy, confusion matrix, and per-class metrics.</td></tr>
+    <tr><td><code>test_predictions.csv</code></td><td>Test-set predictions with <code>y_true</code>, <code>y_pred</code>, <code>enzyme_probability</code>.</td></tr>
+    <tr><td><code>feature_names.txt</code></td><td>Ordered list of all 347 feature names.</td></tr>
+  </table>
+
+  <h3>Notes</h3>
+  <ul>
+    <li>The pre-trained model (<code>enzyme_xgb_model.ubj</code>) is bundled with the package in native XGBoost UBJSON format for cross-version compatibility.</li>
+    <li>Sequences containing non-standard amino acids are automatically sanitized (non-AA20 characters are stripped).</li>
+    <li>Short sequences (&lt; 10 amino acids) may yield less reliable predictions.</li>
+    <li>Feature extraction supports parallel processing via <code>n_jobs</code> — set to <code>-1</code> when processing large datasets.</li>
+    <li>The bundled model uses 799 estimators with max depth 9; feature parameters are fixed (lag=10, weight=0.05, segments=3) and cannot be changed in shorthand CLI mode.</li>
+  </ul>
+
+  <h3>Citations</h3>
+  <p>Please cite sxLaep if you use it in your research:</p>
+  <blockquote>labxscut. sxLaep: Rapid Enzyme/Non-Enzyme Prediction using Sequence Features and XGBoost. (2026).</blockquote>
+  <p>Additional references:</p>
+  <ol>
+    <li>Chou KC. Pseudo amino acid composition and its applications in bioinformatics, proteomics and genome biology. <em>Curr Protein Pept Sci.</em> 2010;11(6):573-95.</li>
+    <li>Dubchak I, Muchnik I, Holbrook SR, Kim SH. Prediction of protein folding class using global description of amino acid sequence. <em>Proc Natl Acad Sci USA.</em> 1995;92(19):8700-4.</li>
+    <li>Chen T, Guestrin C. XGBoost: A scalable tree boosting system. <em>KDD</em> 2016. p.785-94.</li>
+  </ol>
+</section>
+
+<footer>
+  <p>sxLaep &mdash; maintained by <a href="https://github.com/labxscut" target="_blank" rel="noopener">labxscut</a> &middot; <a href="https://github.com/labxscut/sxLaep/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></p>
+  <p style="margin-top:6px;">Contact: <a href="mailto:labx2025@gmail.com">labx2025@gmail.com</a></p>
+</footer>
+
 </body>
 </html>
