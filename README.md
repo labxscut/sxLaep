@@ -7,7 +7,7 @@ sxLaep is an efficient machine learning tool for predicting whether a protein se
 
 [API Reference](https://labxscut.github.io/sxLaep/)
 
-[cmdLine workflow example](https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md)
+[CmdLine workflow example](https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md)
 
 ## INTRODUCTION
 
