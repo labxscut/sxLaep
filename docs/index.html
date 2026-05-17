@@ -396,7 +396,7 @@
       <strong>Fast inference</strong> — pre-trained XGBoost classifier (799 estimators, max depth 9) optimized for rapid enzyme prediction on large-scale protein datasets
     </li>
     <li class="reveal">
-      <strong>Rich feature extraction</strong> — combines Pse-AAC, CTD, windowed AAC, and sequence length for comprehensive sequence representation (347 features)
+      <strong>Rich feature extraction</strong> — combines Pse-AAC, CTD, windowed AAC, and sequence length for comprehensive sequence representation (258 features)
     </li>
     <li class="reveal">
       <strong>Easy to use</strong> — dual Python API and CLI interface; install via pip and start predicting in minutes with the bundled pre-trained model
@@ -582,7 +582,7 @@ print(result.head())</code></pre>
   <details class="api-module">
     <summary><span style="color:var(--accent);font-weight:700;">features</span> — Feature Extraction</summary>
     <div class="body">
-      <p>Protein sequence feature extraction for sxLaep. Combines pseudo-AAC, CTD, and windowed AAC into a 347-dimensional feature vector.</p>
+      <p>Protein sequence feature extraction for sxLaep. Combines pseudo-AAC, CTD, and windowed AAC into a 258-dimensional feature vector.</p>
 
       <div class="func">
         <div class="sig">extract_features(sequence: str, config: FeatureConfig | None = None) → np.ndarray</div>
@@ -817,7 +817,7 @@ print(df[["sequence_id", "pred_label", "enzyme_probability"]].head())</code></pr
     <tr><td><code>enzyme_xgb_model.ubj</code></td><td>Trained model in native XGBoost UBJSON format.</td></tr>
     <tr><td><code>classification_report.txt</code></td><td>Accuracy, confusion matrix, and per-class metrics.</td></tr>
     <tr><td><code>test_predictions.csv</code></td><td>Test-set predictions with <code>y_true</code>, <code>y_pred</code>, <code>enzyme_probability</code>.</td></tr>
-    <tr><td><code>feature_names.txt</code></td><td>Ordered list of all 347 feature names.</td></tr>
+    <tr><td><code>feature_names.txt</code></td><td>Ordered list of all 258 feature names.</td></tr>
   </table>
 
   <h3>Notes</h3>
