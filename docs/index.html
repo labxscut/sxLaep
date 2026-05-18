@@ -363,7 +363,7 @@
 <!-- Hero -->
 <header class="hero">
   <div class="hero-tag">
-    v1.0.4 &middot; Enzyme Prediction
+    v1.0.5 &middot; Enzyme Prediction
   </div>
   <h1><span>sxLaep</span></h1>
   <p>Rapid Enzyme / Non-Enzyme Prediction &mdash; an efficient machine learning tool combining multi-physicochemical sequence features with an XGBoost classifier for fast and accurate binary classification of protein sequences.</p>
@@ -406,9 +406,6 @@
     </li>
     <li class="reveal">
       <strong>Docker support</strong> — pre-configured image with Python 3.11 and all dependencies for isolated execution
-    </li>
-    <li class="reveal">
-      <strong>Built-in evaluation</strong> — classification reports, confusion matrices, and accuracy scoring for model assessment
     </li>
   </ul>
 
@@ -488,18 +485,13 @@ result = predict_fasta(
 )
 print(result.head())</code></pre>
 
-  <h3>Training Your Own Model</h3>
-  <pre><code>sxlaep train \
-  --noenzyme-fasta data/noenzyme.fasta \
-  --enzyme-fasta data/enzyme.fasta \
-  --outdir results/sxlaep_training</code></pre>
 </section>
 
 <!-- API Reference -->
 <section id="api">
   <div class="section-header reveal">
     <h2><span>API Reference</span></h2>
-    <p>Complete API documentation for all sxLaep modules (v1.0.4).</p>
+    <p>Complete API documentation for all sxLaep modules (v1.0.5).</p>
     <div class="section-divider"></div>
   </div>
 
@@ -522,23 +514,6 @@ print(result.head())</code></pre>
         </table>
       </div>
 
-      <div class="func">
-        <div class="sig">TrainingConfig(test_size=0.1, random_state=42, n_jobs=-1, model_path='enzyme_xgb_model.ubj', report_path='classification_report.txt', predictions_path='test_predictions.csv')</div>
-        <div class="desc">Frozen dataclass. Training configuration for enzyme/non-enzyme classification.</div>
-        <table>
-          <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
-          <tr><td><code>test_size</code></td><td><code>0.1</code></td><td>Fraction of data reserved for testing.</td></tr>
-          <tr><td><code>random_state</code></td><td><code>42</code></td><td>Random seed for reproducibility.</td></tr>
-          <tr><td><code>n_jobs</code></td><td><code>-1</code></td><td>Number of parallel jobs. <code>-1</code> uses all cores.</td></tr>
-          <tr><td><code>model_path</code></td><td><code>'enzyme_xgb_model.ubj'</code></td><td>Filename for the saved model (native XGBoost UBJSON format).</td></tr>
-          <tr><td><code>report_path</code></td><td><code>'classification_report.txt'</code></td><td>Filename for the text classification report.</td></tr>
-          <tr><td><code>predictions_path</code></td><td><code>'test_predictions.csv'</code></td><td>Filename for test-set prediction CSV.</td></tr>
-        </table>
-      </div>
-
-      <h4>DEFAULT_XGB_PARAMS</h4>
-      <p style="font-size:.85rem;color:var(--text-secondary);">Default hyperparameters for the XGBoost classifier (799 estimators, max depth 9, tuned learning rate 0.111).</p>
-
       <h4>Constants</h4>
       <table>
         <tr><th>Name</th><th>Description</th></tr>
@@ -548,7 +523,6 @@ print(result.head())</code></pre>
         <tr><td><code>CHARGE</code></td><td>Charge values for each amino acid.</td></tr>
         <tr><td><code>PROPERTIES</code></td><td>Combined dictionary of <code>hydro</code>, <code>polar</code>, and <code>charge</code>.</td></tr>
         <tr><td><code>CTD_GROUPS</code></td><td>Physicochemical group definitions for CTD features (7 systems: hydrophobicity, normalized VDW, polarizability, secondary structure, solvent access, polarity, charge).</td></tr>
-        <tr><td><code>DEFAULT_XGB_PARAMS</code></td><td>Default hyperparameters for the XGBoost classifier.</td></tr>
       </table>
     </div>
   </details>
@@ -619,19 +593,11 @@ print(result.head())</code></pre>
   <details class="api-module">
     <summary><span style="color:var(--accent);font-weight:700;">model</span> — Model &amp; Prediction</summary>
     <div class="body">
-      <p>Model construction, persistence, and prediction utilities. Pre-trained models use native XGBoost UBJSON format (<code>.ubj</code>) for cross-version compatibility.</p>
+      <p>Model loading and prediction utilities. Pre-trained models use native XGBoost UBJSON format (<code>.ubj</code>) for cross-version compatibility.</p>
 
-      <div class="func">
-        <div class="sig">build_xgb_classifier(scale_pos_weight=None, params=None) → XGBClassifier</div>
-        <div class="desc">Build an XGBoost binary classifier using <code>DEFAULT_XGB_PARAMS</code>. Optionally override hyperparameters and set positive-class weight.</div>
-      </div>
       <div class="func">
         <div class="sig">load_model(model_path: str | Path) → XGBClassifier</div>
         <div class="desc">Load a model from native XGBoost format (<code>.json</code> / <code>.ubj</code>) or legacy joblib pickle. Prefers the sibling <code>.ubj</code> file when loading <code>.pkl</code> to avoid version-skew warnings.</div>
-      </div>
-      <div class="func">
-        <div class="sig">save_model(model: Any, model_path: str | Path) → None</div>
-        <div class="desc">Persist a trained XGBoost classifier. Paths ending in <code>.json</code> or <code>.ubj</code> use native <code>Booster.save_model</code>. For <code>.pkl</code> / <code>.joblib</code>, saves with joblib and also writes a sibling <code>.ubj</code> file.</div>
       </div>
       <div class="func">
         <div class="sig">predict_sequences(model, sequences, config=None, n_jobs=1) → pd.DataFrame</div>
@@ -641,44 +607,19 @@ print(result.head())</code></pre>
         <div class="sig">predict_fasta(model_path, fasta_path, output_csv, config=None, n_jobs=1) → pd.DataFrame</div>
         <div class="desc">Load a model, predict all sequences in a FASTA file, and write results to CSV. Returns DataFrame with columns <code>sequence_id</code>, <code>description</code>, <code>pred_label</code>, <code>enzyme_probability</code>.</div>
       </div>
-    </div>
-  </details>
-
-  <!-- training -->
-  <details class="api-module">
-    <summary><span style="color:var(--accent);font-weight:700;">training</span> — Training &amp; Evaluation</summary>
-    <div class="body">
-      <p>Training and evaluation routines for sxLaep. Trains from two FASTA files (enzyme / non-enzyme) with stratified train/test split.</p>
-
       <div class="func">
-        <div class="sig">train_enzyme_classifier(noenzyme_fasta, enzyme_fasta, output_dir='results/sxlaep_training', feature_config=None, training_config=None, xgb_params=None) → dict</div>
-        <div class="desc">Train an enzyme/non-enzyme classifier from two FASTA files. Saves model (native <code>.ubj</code>), classification report, test predictions CSV, and feature names. Returns dict with <code>model</code>, <code>model_path</code>, <code>report_path</code>, <code>predictions_path</code>, <code>feature_names_path</code>, <code>n_sequences</code>, <code>n_features</code>, <code>metrics</code>.</div>
-      </div>
-      <div class="func">
-        <div class="sig">load_labeled_fastas(noenzyme_fasta, enzyme_fasta) → tuple[list[str], np.ndarray]</div>
-        <div class="desc">Load non-enzyme and enzyme FASTA files. Returns sequences list and binary labels array (0 = non-enzyme, 1 = enzyme).</div>
-      </div>
-      <div class="func">
-        <div class="sig">compute_scale_pos_weight(labels: np.ndarray) → float</div>
-        <div class="desc">Compute XGBoost <code>scale_pos_weight</code> from binary labels (negatives / positives ratio).</div>
-      </div>
-      <div class="func">
-        <div class="sig">evaluate_predictions(y_true, y_pred) → dict</div>
-        <div class="desc">Return accuracy, confusion matrix, and classification report (as dict) for binary predictions.</div>
+        <div class="sig">run_prediction_pipeline(model_path, fasta_path, output_csv='results/predictions.csv', feature_config=None, n_jobs=1) → pd.DataFrame</div>
+        <div class="desc">Run the complete FASTA-to-prediction workflow. Thin wrapper around <code>predict_fasta</code>.</div>
       </div>
     </div>
   </details>
 
   <!-- pipeline -->
   <details class="api-module">
-    <summary><span style="color:var(--accent);font-weight:700;">pipeline</span> — End-to-End Workflows</summary>
+    <summary><span style="color:var(--accent);font-weight:700;">pipeline</span> — End-to-End Workflow</summary>
     <div class="body">
-      <p>High-level wrappers for the two main sxLaep workflows: training and prediction.</p>
+      <p>High-level wrapper for the main sxLaep prediction workflow.</p>
 
-      <div class="func">
-        <div class="sig">run_training_pipeline(noenzyme_fasta, enzyme_fasta, output_dir='results/sxlaep_training', feature_config=None, training_config=None, xgb_params=None) → dict</div>
-        <div class="desc">Run the complete FASTA-to-model training workflow. Thin wrapper around <code>train_enzyme_classifier</code>.</div>
-      </div>
       <div class="func">
         <div class="sig">run_prediction_pipeline(model_path, fasta_path, output_csv='results/predictions.csv', feature_config=None, n_jobs=1) → pd.DataFrame</div>
         <div class="desc">Run the complete FASTA-to-prediction workflow. Thin wrapper around <code>predict_fasta</code>.</div>
@@ -692,7 +633,7 @@ print(result.head())</code></pre>
     <div class="body">
       <div class="func">
         <div class="sig">build_parser() → argparse.ArgumentParser</div>
-        <div class="desc">Build the sxLaep command-line argument parser with <code>train</code> and <code>predict</code> subcommands.</div>
+        <div class="desc">Build the sxLaep command-line argument parser with <code>predict</code> subcommand and <code>--input</code> shorthand.</div>
       </div>
       <div class="func">
         <div class="sig">main(argv: list[str] | None = None) → None</div>
@@ -702,18 +643,6 @@ print(result.head())</code></pre>
       <h4>Shorthand (bundled model)</h4>
       <pre><code>sxlaep --input query.fasta --output predictions.csv</code></pre>
       <p style="font-size:.82rem;color:var(--text-muted);">Uses the packaged <code>enzyme_xgb_model.ubj</code>. Feature parameters are fixed to the bundled model's defaults.</p>
-
-      <h4>Train Subcommand</h4>
-      <pre><code>sxlaep train \
-  --noenzyme-fasta data/noenzyme.fasta \
-  --enzyme-fasta data/enzyme.fasta \
-  --outdir results/sxlaep_training \
-  --lag 10 --weight 0.05 --segments 3 \
-  --properties hydro polar charge \
-  --test-size 0.1 --seed 42 --n-jobs -1
-
-# --add-length        append sequence length (default)
-# --no-add-length     exclude sequence length from features</code></pre>
 
       <h4>Predict Subcommand</h4>
       <pre><code>sxlaep predict \
@@ -731,37 +660,9 @@ print(result.head())</code></pre>
 <section id="workflow">
   <div class="section-header reveal">
     <h2><span>Workflow</span></h2>
-    <p>End-to-end workflow from raw FASTA files to trained model and predictions.</p>
+    <p>End-to-end prediction workflow from raw FASTA files to enzyme/non-enzyme classification results.</p>
     <div class="section-divider"></div>
   </div>
-
-  <div class="pipeline-flow reveal">
-    <span class="step">FASTA Files</span><span class="arrow">→</span>
-    <span class="step">Read &amp; Label</span><span class="arrow">→</span>
-    <span class="step">Feature Extraction</span><span class="arrow">→</span>
-    <span class="step">Train/Test Split</span><span class="arrow">→</span>
-    <span class="step">XGBoost Training</span><span class="arrow">→</span>
-    <span class="step">Evaluate</span><span class="arrow">→</span>
-    <span class="step">Save Model (.ubj)</span>
-  </div>
-
-  <h3>Training Example</h3>
-  <pre><code># CLI
-sxlaep train \
-  --noenzyme-fasta data/noenzyme.fasta \
-  --enzyme-fasta data/enzyme.fasta \
-  --outdir results/sxlaep_training
-
-# Python API
-from sxlaep.training import train_enzyme_classifier
-
-results = train_enzyme_classifier(
-    noenzyme_fasta="data/noenzyme.fasta",
-    enzyme_fasta="data/enzyme.fasta",
-    output_dir="results/sxlaep_training",
-)
-print(results["metrics"]["accuracy"])  # e.g. 0.92
-print(results["model_path"])           # .../enzyme_xgb_model.ubj</code></pre>
 
   <h3>Prediction Example</h3>
   <pre><code># CLI (shorthand, bundled model)
@@ -809,15 +710,6 @@ print(df[["sequence_id", "pred_label", "enzyme_probability"]].head())</code></pr
     <tr><td><code>description</code></td><td>str</td><td>Full FASTA header without the leading <code>&gt;</code>.</td></tr>
     <tr><td><code>pred_label</code></td><td>int</td><td>Predicted class: 0 = Non-Enzyme, 1 = Enzyme.</td></tr>
     <tr><td><code>enzyme_probability</code></td><td>float</td><td>Enzyme probability score (0.0 ~ 1.0).</td></tr>
-  </table>
-
-  <h3>Training Output Files</h3>
-  <table>
-    <tr><th>File</th><th>Description</th></tr>
-    <tr><td><code>enzyme_xgb_model.ubj</code></td><td>Trained model in native XGBoost UBJSON format.</td></tr>
-    <tr><td><code>classification_report.txt</code></td><td>Accuracy, confusion matrix, and per-class metrics.</td></tr>
-    <tr><td><code>test_predictions.csv</code></td><td>Test-set predictions with <code>y_true</code>, <code>y_pred</code>, <code>enzyme_probability</code>.</td></tr>
-    <tr><td><code>feature_names.txt</code></td><td>Ordered list of all 258 feature names.</td></tr>
   </table>
 
   <h3>Notes</h3>
