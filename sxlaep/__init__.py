@@ -8,10 +8,9 @@ Key features:
 - Fast single-sequence and batch prediction (including FASTA files)
 - Built-in parallelized feature extraction
 - Simple Python API and command-line interface (CLI)
-- End-to-end training pipeline for custom models
 """
 
-from .config import FeatureConfig, TrainingConfig
+from .config import FeatureConfig
 from .fasta import FastaRecord, read_fasta, read_fasta_records
 from .features import (
     ctd_features,
@@ -22,11 +21,10 @@ from .features import (
     sanitize_sequence,
     window_aac,
 )
-from .pipeline import run_prediction_pipeline, run_training_pipeline
+from .model import load_model, predict_fasta, predict_sequences, run_prediction_pipeline
 
 __all__ = [
     "FeatureConfig",
-    "TrainingConfig",
     "FastaRecord",
     "read_fasta",
     "read_fasta_records",
@@ -37,8 +35,10 @@ __all__ = [
     "extract_features",
     "extract_feature_matrix",
     "feature_names",
-    "run_training_pipeline",
+    "load_model",
+    "predict_sequences",
+    "predict_fasta",
     "run_prediction_pipeline",
 ]
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"

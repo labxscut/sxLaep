@@ -44,20 +44,6 @@ CTD_GROUPS: Dict[str, Sequence[Set[str]]] = {
     "charge": [set("KR"), set("ANCQGHILMFPSTWYV"), set("DE")],
 }
 
-DEFAULT_XGB_PARAMS = {
-    "n_estimators": 799,
-    "max_depth": 9,
-    "learning_rate": 0.11107207866102274,
-    "subsample": 0.8205356041339127,
-    "colsample_bytree": 0.7865743071602549,
-    "gamma": 0.6350739428156533,
-    "min_child_weight": 3,
-    "random_state": 42,
-    "n_jobs": -1,
-    "eval_metric": "logloss",
-}
-
-
 @dataclass(frozen=True)
 class FeatureConfig:
     """Feature extraction configuration.
@@ -81,15 +67,3 @@ class FeatureConfig:
     n_segments: int = 3
     add_length: bool = True
     properties: Mapping[str, Mapping[str, float]] = field(default_factory=lambda: PROPERTIES)
-
-
-@dataclass(frozen=True)
-class TrainingConfig:
-    """Training configuration for enzyme/non-enzyme classification."""
-
-    test_size: float = 0.1
-    random_state: int = 42
-    n_jobs: int = -1
-    model_path: str = "enzyme_xgb_model.ubj"
-    report_path: str = "classification_report.txt"
-    predictions_path: str = "test_predictions.csv"

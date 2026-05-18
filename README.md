@@ -191,19 +191,13 @@ run_prediction_pipeline(
 
 ### Command line
 
-Training:
-
-```bash
-sxlaep train --noenzyme-fasta neg.fasta --enzyme-fasta pos.fasta --outdir results/sxlaep_training
-```
-
 Prediction (writes a CSV):
 
 ```bash
 sxlaep predict --model path/to/model.pkl --fasta sequences.fasta --output predictions.csv
 ```
 
-**Shorthand** (bundled **`enzyme_xgb_model.ubj`** in the installed package; no **`train`** / **`predict`** subcommand):
+**Shorthand** (bundled **`enzyme_xgb_model.ubj`** in the installed package; no **`predict`** subcommand):
 
 ```bash
 sxlaep --input sequences.fasta --output predictions.csv
@@ -215,13 +209,12 @@ Help:
 
 ```bash
 sxlaep --help
-sxlaep train --help
 sxlaep predict --help
 ```
 
 ## EXECUTABLES
 
-- **`sxlaep`** — CLI: subcommands **`train`** and **`predict`**, or shorthand **`sxlaep --input`** / **`-i`** (bundled model) with **`--output`** / **`-o`** (see **Quick start**). Use **`--help`** for global and subcommand options.
+- **`sxlaep`** — CLI: **`predict`** subcommand, or shorthand **`sxlaep --input`** / **`-i`** (bundled model) with **`--output`** / **`-o`** (see **Quick start**). Use **`--help`** for global and subcommand options.
 
 From a **clone**, optional end-user helper:
 
@@ -247,29 +240,13 @@ From a **clone**, optional end-user helper:
 
 | Argument | Required | Description |
 |----------|----------|-------------|
-| `--input`, `-i` | Yes | Input FASTA path (uses packaged **`enzyme_xgb_model.ubj`**). Do not combine with **`train`** or **`predict`**. |
+| `--input`, `-i` | Yes | Input FASTA path (uses packaged **`enzyme_xgb_model.ubj`**). Do not combine with **`predict`**. |
 | `--output`, `-o` | No | Output CSV path (default **`sxlaep_predictions.csv`** in the current working directory). |
 | `--lag` | No | Pseudo-AAC lag — **fixed to `10`** for bundled model; use `sxlaep predict` to customize. |
 | `--weight` | No | Pseudo-AAC weight — **fixed to `0.05`** for bundled model; use `sxlaep predict` to customize. |
 | `--segments` | No | Window-AAC segments — **fixed to `3`** for bundled model; use `sxlaep predict` to customize. |
 | `--add-length` / `--no-add-length` | No | Append sequence length — **fixed** for bundled model; use `sxlaep predict` to customize. |
 | `--properties` | No | Physicochemical properties — **fixed to `hydro polar charge`** for bundled model; use `sxlaep predict` to customize. |
-
-#### `sxlaep train`
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `--noenzyme-fasta` | Yes | FASTA path for non-enzyme (negative) sequences. |
-| `--enzyme-fasta` | Yes | FASTA path for enzyme (positive) sequences. |
-| `--outdir` | No | Training output directory (default `results/sxlaep_training`). |
-| `--lag` | No | Pseudo-AAC max correlation lag (default `10`). |
-| `--weight` | No | Pseudo-AAC sequence-order weight (default `0.05`). |
-| `--segments` | No | Number of window-AAC N-to-C segments (default `3`). |
-| `--add-length` / `--no-add-length` | No | Append raw sequence length to feature vector (default: enabled). |
-| `--properties` | No | Physicochemical properties for pseudo-AAC: one or more of `hydro`, `polar`, `charge` (default: all three). |
-| `--test-size` | No | Held-out test fraction (default `0.1`). |
-| `--seed` | No | Random seed for reproducibility (default `42`). |
-| `--n-jobs` | No | Parallel workers for feature extraction (default `-1` = all cores). |
 
 #### `sxlaep predict`
 
@@ -327,7 +304,7 @@ sxlaep --input proteins.fasta --output predictions.csv
 
 ## NOTES
 
-> - The pre-trained model is shipped as `enzyme_xgb_model.ubj` (XGBoost native format). Training still writes a sibling `.ubj` when you save `*.pkl` for backward compatibility.
+> - The pre-trained model is shipped as `enzyme_xgb_model.ubj` (XGBoost native format).
 > - The Python package name for installation is `sxlaep` (for example: `python3 -m pip install --prefer-binary sxlaep`).
 > - Sequences containing non-standard amino acids are automatically sanitized (only the 20 standard amino acids are used).
 > - Short sequences (< 10 amino acids) may yield less reliable predictions.

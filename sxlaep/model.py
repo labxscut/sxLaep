@@ -1,58 +1,19 @@
-"""Model construction, persistence, and prediction utilities."""
+"""Model loading and prediction utilities."""
 
 from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Sequence
 
 import numpy as np
 import pandas as pd
 
-from .config import DEFAULT_XGB_PARAMS, FeatureConfig
+from .config import FeatureConfig
 from .fasta import read_fasta_records
 from .features import extract_feature_matrix
 
 _NATIVE_MODEL_SUFFIXES = frozenset({".json", ".ubj", ".txt"})
-
-
-def build_xgb_classifier(
-    scale_pos_weight: float | None = None,
-    params: Mapping[str, Any] | None = None,
-):
-    """Build an XGBoost binary classifier for enzyme prediction."""
-
-    import xgboost as xgb
-
-    xgb_params = dict(DEFAULT_XGB_PARAMS)
-    if params:
-        xgb_params.update(params)
-    if scale_pos_weight is not None:
-        xgb_params["scale_pos_weight"] = scale_pos_weight
-    return xgb.XGBClassifier(**xgb_params)
-
-
-def save_model(model: Any, model_path: str | Path) -> None:
-    """Persist a trained XGBoost classifier.
-
-    Paths ending in ``.json`` or ``.ubj`` use XGBoost's native format
-    (``Booster.save_model``), which loads without version-skew pickle warnings.
-    For ``.pkl`` / ``.joblib``, the sklearn wrapper is saved with joblib and a
-    sibling ``.ubj`` is written when ``save_model`` is available.
-    """
-
-    import joblib
-
-    model_path = Path(model_path)
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-    save_native = getattr(model, "save_model", None)
-    suffix = model_path.suffix.lower()
-    if save_native is not None and suffix in _NATIVE_MODEL_SUFFIXES:
-        save_native(str(model_path))
-        return
-    joblib.dump(model, model_path)
-    if save_native is not None and suffix in {".pkl", ".joblib"}:
-        save_native(str(model_path.with_suffix(".ubj")))
 
 
 def load_model(model_path: str | Path) -> Any:
@@ -111,3 +72,21 @@ def predict_fasta(
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(output_csv, index=False)
     return result
+
+
+def run_prediction_pipeline(
+    model_path: str | Path,
+    fasta_path: str | Path,
+    output_csv: str | Path = "results/predictions.csv",
+    feature_config: FeatureConfig | None = None,
+    n_jobs: int = 1,
+):
+    """Run the complete FASTA-to-prediction sxLaep workflow."""
+
+    return predict_fasta(
+        model_path=model_path,
+        fasta_path=fasta_path,
+        output_csv=output_csv,
+        config=feature_config,
+        n_jobs=n_jobs,
+    )
