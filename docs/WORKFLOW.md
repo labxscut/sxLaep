@@ -373,10 +373,3 @@ Guidelines:
 
 For very large datasets (e.g., 100k+ sequences), consider splitting a FASTA into multiple chunks and running multiple `sxlaep` processes, then concatenating CSV outputs.
 
-
-### Q4: How do I quickly see all options?
-
-```bash
-sxlaep --help
-sxlaep predict --help
-```
