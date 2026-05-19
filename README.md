@@ -236,7 +236,7 @@ From a **clone**, optional end-user helper:
 
 ### Command line arguments
 
-#### Shorthand `sxlaep --input` (bundled model)
+This shorthand uses the model packaged inside the installed `sxlaep` distribution (e.g., installed via `pip` / `pipx`).
 
 | Argument | Required | Description |
 |----------|----------|-------------|
