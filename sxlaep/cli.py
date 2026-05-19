@@ -23,7 +23,8 @@ def _bundled_ubj_path() -> Path:
 def build_parser() -> argparse.ArgumentParser:
     """Build the sxLaep command-line argument parser."""
 
-    parser = argparse.ArgumentParser(description="sxLaep enzyme/non-enzyme classifier")
+    # Keep `prog` stable so documentation and CLI help match the installed entrypoint name.
+    parser = argparse.ArgumentParser(prog="sxlaep", description="sxLaep enzyme/non-enzyme classifier")
     parser.add_argument(
         "-i",
         "--input",
