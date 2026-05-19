@@ -312,8 +312,8 @@ sxlaep --input proteins.fasta --output predictions.csv
 
 ## CONTACT
 
-> lcxia@scut.edu.cn 
-> dhy.scut@outlook.com
+> lcxia@scut.edu.cn<br>
+> dhy.scut@outlook.com<br>
 > GitHub: https://github.com/labxscut
 
 ## CITATIONS
