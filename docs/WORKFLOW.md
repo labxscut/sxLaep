@@ -373,38 +373,6 @@ Guidelines:
 
 For very large datasets (e.g., 100k+ sequences), consider splitting a FASTA into multiple chunks and running multiple `sxlaep` processes, then concatenating CSV outputs.
 
----
-
-## FAQ / Troubleshooting
-
-### Q1: I get `Bundled model not found ... expected pip/wheel install`
-
-You are likely running from a source checkout without installing the package. Fix:
-
-- Install `sxlaep` (recommended for shorthand mode):
-  - `pipx install sxlaep` or `pip install sxlaep`
-
-Then retry:
-
-```bash
-sxlaep --input proteins.fasta --output predictions.csv
-```
-
-### Q2: My results look wrong with a custom model
-
-Checklist:
-- Ensure feature flags match training exactly (`--lag`, `--weight`, `--segments`, `--add-length`, `--properties`).
-- Confirm your input is protein FASTA (amino acids), not nucleotides.
-- Ensure you are using the same preprocessing choices used during training.
-
-### Q3: FASTA parsing errors or empty sequences
-
-Common causes:
-- headers missing the leading `>`
-- encoding/newline issues after moving files between Windows and Linux/WSL
-- stray invisible characters in sequence lines
-
-Try re-saving as UTF-8 + LF and re-run the sanity check snippet.
 
 ### Q4: How do I quickly see all options?
 
