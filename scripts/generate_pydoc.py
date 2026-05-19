@@ -73,7 +73,7 @@ def write_index() -> None:
   <h2>Modules</h2>
   {cards}
   <h2>Workflow</h2>
-  <p>See <a href="https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md">cmdline workflow example</a> and <a href="https://github.com/labxscut/sxLaep/blob/main/docs/API_REFERENCE.md">API_REFERENCE.md</a>.</p>
+  <p>See <a href="https://github.com/labxscut/sxLaep/blob/dhy/docs/WORKFLOW.md">cmdline workflow manual</a> and <a href="https://github.com/labxscut/sxLaep/blob/dhy/docs/API_REFERENCE.md">API_REFERENCE.md</a>.</p>
 </body>
 </html>
 """,
