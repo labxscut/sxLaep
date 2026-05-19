@@ -316,10 +316,5 @@ sxlaep --input proteins.fasta --output predictions.csv
 > dhy.scut@outlook.com<br>
 > GitHub: https://github.com/labxscut
 
-## CITATIONS
-
-Please cite sxLaep if you use it in your research:
-
-> labxscut. sxLaep: a Lightweight and Accurate Enzyme Predictor for High-throughput Mining of Metagenomic Sequences. (2026).
 
 
