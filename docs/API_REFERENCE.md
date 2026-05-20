@@ -23,10 +23,6 @@ add_length:
 properties:
     Amino-acid physicochemical property tables used by pseudo-AAC.
 
-### class `TrainingConfig`
-
-Training configuration for enzyme/non-enzyme classification.
-
 ## `sxlaep.fasta`
 
 FASTA reading utilities for protein sequence experiments.
@@ -136,11 +132,7 @@ Compute windowed amino acid composition over N-to-C sequence segments.
 
 ## `sxlaep.model`
 
-Model construction, persistence, and prediction utilities.
-
-### `build_xgb_classifier(scale_pos_weight: 'float | None' = None, params: 'Mapping[str, Any] | None' = None)`
-
-Build an XGBoost binary classifier for enzyme prediction.
+Model loading and prediction utilities.
 
 ### `load_model(model_path: 'str | Path') -> 'Any'`
 
@@ -154,61 +146,17 @@ Load a model, predict a FASTA file, and write predictions to CSV.
 
 Predict enzyme probabilities for a list of protein sequences.
 
-### `save_model(model: 'Any', model_path: 'str | Path') -> 'None'`
-
-Persist a trained XGBoost classifier.
-
-Paths ending in ``.json`` or ``.ubj`` use XGBoost's native format
-(``Booster.save_model``), which loads without version-skew pickle warnings.
-For ``.pkl`` / ``.joblib``, the sklearn wrapper is saved with joblib and a
-sibling ``.ubj`` is written when ``save_model`` is available.
-
-## `sxlaep.training`
-
-Training and evaluation routines for sxLaep.
-
-### `compute_scale_pos_weight(labels: 'np.ndarray') -> 'float'`
-
-Compute XGBoost positive-class weighting from binary labels.
-
-### `evaluate_predictions(y_true: 'np.ndarray', y_pred: 'np.ndarray') -> 'dict[str, Any]'`
-
-Return standard binary classification metrics and report objects.
-
-### `load_labeled_fastas(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path') -> 'tuple[list[str], np.ndarray]'`
-
-Load non-enzyme and enzyme FASTA files into sequences and binary labels.
-
-### `train_enzyme_classifier(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/sxlaep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
-
-Train an enzyme/non-enzyme classifier from two FASTA files.
-
-Parameters
-----------
-noenzyme_fasta:
-    FASTA file containing negative-class protein sequences.
-enzyme_fasta:
-    FASTA file containing positive-class enzyme sequences.
-output_dir:
-    Directory for model and evaluation outputs.
-feature_config:
-    Feature extraction configuration.
-training_config:
-    Train/test split and output naming configuration.
-xgb_params:
-    Optional overrides for XGBoost hyperparameters.
-
-## `sxlaep.pipeline`
-
-End-to-end workflows for sxLaep training and prediction.
-
 ### `run_prediction_pipeline(model_path: 'str | Path', fasta_path: 'str | Path', output_csv: 'str | Path' = 'results/predictions.csv', feature_config: 'FeatureConfig | None' = None, n_jobs: 'int' = 1)`
 
 Run the complete FASTA-to-prediction sxLaep workflow.
 
-### `run_training_pipeline(noenzyme_fasta: 'str | Path', enzyme_fasta: 'str | Path', output_dir: 'str | Path' = 'results/sxlaep_training', feature_config: 'FeatureConfig | None' = None, training_config: 'TrainingConfig | None' = None, xgb_params: 'Mapping[str, Any] | None' = None) -> 'dict[str, Any]'`
+## `sxlaep.training`
 
-Run the complete FASTA-to-model sxLaep training workflow.
+No module docstring provided.
+
+## `sxlaep.pipeline`
+
+No module docstring provided.
 
 ## `sxlaep.cli`
 

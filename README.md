@@ -5,7 +5,7 @@ sxLaep is an efficient machine learning tool for predicting whether a protein se
 
 [API Reference](https://labxscut.github.io/sxLaep/)
 
-[CmdLine workflow example](https://github.com/labxscut/sxLaep/blob/main/docs/WORKFLOW.md)
+[Lightweight and Accurate Enzyme Predictor (sxLaep) Manuals](https://github.com/labxscut/sxLaep/blob/dhy/docs/WORKFLOW.md)
 
 ## INTRODUCTION
 
@@ -312,14 +312,9 @@ sxlaep --input proteins.fasta --output predictions.csv
 
 ## CONTACT
 
-> lcxia@scut.edu.cn 
-> dhy.scut@outlook.com
+> lcxia@scut.edu.cn<br>
+> dhy.scut@outlook.com<br>
 > GitHub: https://github.com/labxscut
 
-## CITATIONS
-
-Please cite sxLaep if you use it in your research:
-
-> labxscut. sxLaep: a Lightweight and Accurate Enzyme Predictor for High-throughput Mining of Metagenomic Sequences. (2026).
 
 
