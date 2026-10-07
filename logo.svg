@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="sxLaep logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(165, 62%, 72%)"/>
+      <stop offset="1" stop-color="hsl(193, 55%, 34%)"/>
+    </linearGradient>
+    <clipPath id="frame"><rect x="4" y="4" width="120" height="120" rx="28"/></clipPath>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <g clip-path="url(#frame)">
+    <rect x="34" y="70" width="60" height="12" rx="6" fill="#ffffff" opacity="0.92"/><rect x="42" y="50" width="44" height="12" rx="6" fill="#ffffff" opacity="0.72"/><rect x="50" y="30" width="28" height="12" rx="6" fill="#ffffff" opacity="0.52"/>
+  </g>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="hsl(345, 45%, 40%)" stroke-width="2" opacity="0.5"/>
+</svg>
