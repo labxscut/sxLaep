@@ -46,34 +46,23 @@ def render_pydoc() -> None:
 
 
 def write_index() -> None:
-    """Write a static HTML index for the generated API pages."""
+    """Redirect the legacy project Pages URL to the LabX tools page."""
 
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    cards = "\n".join(
-        f'<div class="card"><a href="pydoc/{m}.html"><code>{m}</code></a><p>{pydoc.describe(pydoc.locate(m))}</p></div>'
-        for m in MODULES
-    )
     (DOCS_DIR / "index.html").write_text(
-        f"""<!DOCTYPE html>
+        """<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>sxLaep API Documentation</title>
-  <style>
-    body {{ font-family: Arial, sans-serif; max-width: 980px; margin: 40px auto; line-height: 1.55; color: #222; }}
-    h1 {{ border-bottom: 2px solid #222; padding-bottom: 10px; }}
-    .card {{ border: 1px solid #ddd; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }}
-    a {{ color: #0b57d0; text-decoration: none; font-weight: 700; }}
-    code {{ background: #f6f8fa; padding: 2px 5px; border-radius: 4px; }}
-  </style>
+  <meta http-equiv="refresh" content="0; url=https://labxscut.github.io/tools/sxlaep/">
+  <link rel="canonical" href="https://labxscut.github.io/tools/sxlaep/">
+  <title>sxLaep documentation moved</title>
 </head>
 <body>
-  <h1>sxLaep API Documentation</h1>
-  <p>Generated with Python PyDoc. The documentation covers FASTA parsing, sequence feature extraction, model training, prediction, and command-line workflows.</p>
-  <h2>Modules</h2>
-  {cards}
-  <h2>Workflow</h2>
-  <p>See <a href="https://github.com/labxscut/sxLaep/blob/dhy/docs/WORKFLOW.md">cmdline workflow manual</a> and <a href="https://github.com/labxscut/sxLaep/blob/dhy/docs/API_REFERENCE.md">API_REFERENCE.md</a>.</p>
+  <p>The sxLaep documentation has moved to
+    <a href="https://labxscut.github.io/tools/sxlaep/">https://labxscut.github.io/tools/sxlaep/</a>.
+  </p>
+  <script>window.location.replace("https://labxscut.github.io/tools/sxlaep/");</script>
 </body>
 </html>
 """,
