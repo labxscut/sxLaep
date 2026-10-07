@@ -35,16 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install package
-        run: pip install -e .
-
-      - name: Regenerate API docs (PyDoc + generated markdown)
-        run: python scripts/generate_pydoc.py
-
       - name: Redirect legacy Pages URL
         run: |
           cat > docs/index.html <<'HTML'
